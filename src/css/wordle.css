@@ -1,0 +1,52 @@
+.wordle {
+  margin: auto;
+}
+
+.wordle .row {
+  display: flex;
+  flex-direction: row;
+}
+
+.wordle div .tile {
+  width: 50px;
+  height: 50px;
+  /* background-color: red; */
+  margin: 2px;
+  border-radius: 1.5px;
+  border: 3px solid #d3d6da;
+
+  display: flex;
+  color: white;
+  /* margin: auto; */
+}
+
+.wordle div .tile.blank {
+  color: black;
+}
+
+.wordle div .tile.correct {
+  background: #6aaa64;
+  border-color: transparent;
+}
+.wordle div .tile.incorrect {
+  background: #787c7e;
+  border-color: transparent;
+}
+.wordle div .tile.misplaced {
+  background: #c9b458;
+  border-color: transparent;
+}
+.wordle div .tile.finished {
+  background: rgba(0, 0, 0, 0.025);
+  border-color: transparent;
+}
+
+.wordle .row .tile .letter {
+  margin: auto;
+  font-weight: bold;
+  font-size: 32px;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  vertical-align: middle;
+}
