@@ -7,15 +7,15 @@ class WordleGroup extends React.Component {
     this.state = {
       guess: "",
       past_guesses: [
-        "DENSE",
-        "LIGHT",
-        "MOUNT",
-        "BRITT",
-        "BRITT",
-        // "BRITT",
-        // "BRITT",
-        "BRITT",
-        "FRUIT"
+        // "1ENSE",
+        // "2IGHT",
+        // "3OUNT",
+        // "4RITT",
+        // "5RITT",
+        // "6RITT"
+        // "7RITT",
+        // "8RITT",
+        // "9RUIT"
       ],
       word_length: 5,
       max_guesses: 10,
@@ -56,13 +56,16 @@ class WordleGroup extends React.Component {
     const { past_guesses, guess, max_guesses } = this.state;
     return (
       <div id="wordle-group">
-        {/* <p>{guess}</p> */}
-        <Wordle
-          key={this.state.doop}
-          prev_attempts={past_guesses}
-          cur_attempt={guess}
-          max_attempts={max_guesses}
-        />
+        {new Array(4).fill("").map((val, index) => {
+          return (
+            <Wordle
+              key={this.state.doop}
+              prev_attempts={past_guesses}
+              cur_attempt={guess}
+              max_attempts={max_guesses}
+            />
+          );
+        })}
       </div>
     );
   }

@@ -37,11 +37,8 @@ class Wordle extends React.Component {
 
   renderTile(index, letter, is_locked) {
     const { correct_word, wordle_active } = this.state;
-    // const word = this.state.word;
 
     function getClassName() {
-      // console.log(letter);
-
       if (is_locked) {
         if (correct_word[index] == letter) {
           return "correct";
@@ -50,6 +47,8 @@ class Wordle extends React.Component {
         } else {
           return "incorrect";
         }
+      } else if (!wordle_active) {
+        return "finished";
       } else {
         return "blank";
       }
@@ -73,27 +72,19 @@ class Wordle extends React.Component {
     );
   };
 
-  renderCurrentAttempt() {
-    const { correct_word, wordle_active } = this.state;
-    const { prev_attempts, cur_attempt, max_attempts } = this.props;
-    if (
-      prev_attempts[prev_attempts.length - 1] != correct_word &&
-      wordle_active
-    ) {
-      return this.renderRow(cur_attempt, false);
-    }
-  }
-
   renderRemainingAttempts() {
     const { correct_word, wordle_active } = this.state;
     const { prev_attempts, cur_attempt, max_attempts } = this.props;
-    // console.log(max_attempts - (prev_attempts.length + 1));
     if (max_attempts - (prev_attempts.length + 1) >= 0) {
-      return [
-        ...new Array(max_attempts - (prev_attempts.length + 1)).fill("")
-      ].map((val, index) => {
-        return this.renderRow("", false);
-      });
+      return [...new Array(max_attempts - prev_attempts.length).fill("")].map(
+        (empty, index) => {
+          if (index == 0) {
+            return this.renderRow(cur_attempt, false);
+          } else {
+            return this.renderRow("", false);
+          }
+        }
+      );
     }
   }
 
@@ -105,7 +96,6 @@ class Wordle extends React.Component {
         {prev_attempts.map((attempt) => {
           return this.renderRow(attempt, true);
         })}
-        {this.renderCurrentAttempt()}
         {this.renderRemainingAttempts()}
       </div>
     );
