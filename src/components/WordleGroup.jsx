@@ -37,17 +37,9 @@ class WordleGroup extends React.Component {
     if (ev.key === "Enter") {
       this.setState({ past_guesses: [...past_guesses, guess], guess: "" });
     }
-    // if (ev.key === "/") {
-    //   this.setState({ doop: this.state.doop + 1 });
-    // }
   };
 
-  saveWordleReference(ref) {
-    // console.log(ref);
-  }
-
   componentDidMount() {
-    // console.log(words);
     document.addEventListener("keydown", this.onKeyPress);
   }
 
