@@ -8,12 +8,6 @@ class Keyboard extends React.Component {
     super(props);
   }
 
-  componentDidMount() {}
-
-  componentWillUnmount() {}
-
-  componentDidUpdate(prevProps, prevState) {}
-
   doop(letter, correct_word) {
     const { words, closest_wordle, past_guesses } = this.props;
     correct_word = words[closest_wordle];
@@ -32,7 +26,6 @@ class Keyboard extends React.Component {
           guess.indexOf(letter) !== -1 && correct_word.indexOf(letter) !== -1
       ) != -1
     ) {
-      console.log(correct_word, correct_word.split("").indexOf(letter), letter);
       return { letter, className: "misplaced" };
     } else if (
       past_guesses.findIndex(
@@ -74,8 +67,6 @@ class Keyboard extends React.Component {
   }
 
   render() {
-    const { prev_attempts, correct_word, max_attempts, cur_attempt } =
-      this.props;
     return (
       <div id="keyboard" key={uuidv4()}>
         {this.renderKeyboard()}
