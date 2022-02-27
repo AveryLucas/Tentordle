@@ -14,13 +14,46 @@ class Keyboard extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {}
 
+  doop(letter, correct_word) {
+    const { words, closest_wordle, past_guesses } = this.props;
+    correct_word = words[closest_wordle];
+    // Find a guess where the chosen letter is in the right spot
+    if (
+      past_guesses.findIndex(
+        (guess) =>
+          guess.indexOf(letter) !== -1 &&
+          guess.indexOf(letter) === correct_word.indexOf(letter)
+      ) !== -1
+    ) {
+      return { letter, className: "correct" };
+    } else if (
+      past_guesses.findIndex(
+        (guess) =>
+          guess.indexOf(letter) !== -1 && correct_word.indexOf(letter) !== -1
+      ) != -1
+    ) {
+      console.log(correct_word, correct_word.split("").indexOf(letter), letter);
+      return { letter, className: "misplaced" };
+    } else if (
+      past_guesses.findIndex(
+        (guess) =>
+          guess.indexOf(letter) !== -1 && correct_word.indexOf(letter) === -1
+      ) !== -1 &&
+      letter.length === 1
+    ) {
+      return { letter, className: "incorrect" };
+    }
+    return { letter, className: "" };
+  }
+
   renderLetter(text, is_wide = false, onClick) {
+    let key = this.doop(text);
     return (
       <span
-        className={`keyboard-letter ${is_wide ? "wide" : ""}`}
+        className={`keyboard-letter ${is_wide ? "wide" : ""} ${key.className}`}
         key={uuidv4()}
       >
-        <div className="letter">{text}</div>
+        <div className="letter">{key.letter}</div>
       </span>
     );
   }

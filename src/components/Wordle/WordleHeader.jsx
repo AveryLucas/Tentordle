@@ -7,37 +7,38 @@ class WordleHeader extends React.Component {
   }
 
   doop(word, correct_word) {
-    const is_locked = this.props.is_locked;
     return word.split("").map((letter, index) => {
-      if (!is_locked) {
-        if (letter.trim() != "") {
-          return { letter, className: "occupied" };
-        } else {
-          return { letter, className: "empty" };
-        }
+      // console.log(correct_word, letter, index, correct_word[index] == letter);
+      if (correct_word[index] == letter) {
+        return { letter, className: "correct" };
+      } else if (correct_word.split("").indexOf(letter) != -1) {
+        return { letter, className: "misplaced" };
       } else {
-        // This is a catch for wordle rows past the current guessing row early game
-        if (word.trim() == "") {
-          return { letter, className: "empty" };
-        } else if (correct_word[index] == letter) {
-          return { letter, className: "correct" };
-        } else if (correct_word.split("").indexOf(letter) != -1) {
-          return { letter, className: "misplaced" };
-        } else {
-          return { letter, className: "incorrect" };
-        }
+        return { letter, className: "incorrect" };
       }
     });
   }
 
   render() {
-    const { history, closest_wordle } = this.props;
-    // console.log(closest_wordle);
+    const { history, closest_wordle, words, correct_word } = this.props;
+    // console.log(words[closest_wordle]);
+    // let closest = closest_wordle == undefined ? 0 : closest_wordle;
+    // console.log(this.props.closest_wordle);
     return (
       <div id="wordle-header">
         <div id="wordle-history">
           {history.reverse().map((guess) => {
-            return <div key={uuidv4()}>{guess}</div>;
+            return (
+              <div>
+                {this.doop(guess, words[closest_wordle]).map((tile) => {
+                  return (
+                    <span className={`letter ${tile.className}`}>
+                      {tile.letter.toUpperCase()}
+                    </span>
+                  );
+                })}
+              </div>
+            );
           })}
         </div>
         <div id="wordle-title">
