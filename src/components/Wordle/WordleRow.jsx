@@ -1,6 +1,6 @@
 import React from "react";
 import { v4 as uuidv4 } from "uuid";
-import "../css/wordle.css";
+// import "../css/wordle.css";
 
 class WordleRow extends React.Component {
   constructor(props) {
@@ -14,33 +14,40 @@ class WordleRow extends React.Component {
   componentDidUpdate(prevProps, prevState) {}
 
   shouldComponentUpdate(prevProps) {
+    // console.log(prevProps);
     // Deny updates if this wordle is solved...
-    return !this.props.is_locked;
+    return !this.props.is_locked || this.props.word != prevProps.word;
   }
 
   renderTile(index, letter) {
     const { correct_word, is_locked } = this.props;
-    // console.log(is_locked)
+
     function getClassName() {
       if (!is_locked) {
-        return "blank";
+        if (letter.trim() != "") {
+          return "occupied";
+        } else {
+          return "empty";
+        }
       } else {
-        return "finished";
+        // console.log()
+        if (letter.trim() != "") {
+          if (correct_word[index] == letter) {
+            return "correct";
+          } else if (correct_word.split("").indexOf(letter) != -1) {
+            return "misplaced";
+          } else {
+            return "incorrect";
+          }
+        } else {
+          return "empty";
+        }
       }
-      //   if (correct_word[index] === letter) {
-      //     return "correct";
-      //   } else if (correct_word.indexOf(letter) !== -1) {
-      //     return "misplaced";
-      //   } else {
-      //     return "incorrect";
-      //   }
-      // } else if (is_locked) {
-      // } else {
     }
 
     return (
       <div key={uuidv4()} className={`tile ${getClassName()}`}>
-        {letter}
+        <span className="letter">{letter}</span>
       </div>
     );
   }

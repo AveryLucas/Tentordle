@@ -1,12 +1,10 @@
 import React from "react";
-import { v4 as uuidv4 } from "uuid";
-import "../css/wordle.css";
 import WordleRow from "./WordleRow";
+// import { v4 as uuidv4 } from "uuid";
 
 class Wordle extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = { wordle_active: true };
   }
 
@@ -28,25 +26,25 @@ class Wordle extends React.Component {
   }
 
   isGameOver() {
-    const { prev_attempts, max_attempts, correct_word } = this.props;
+    const { prev_attempts, show_on_screen, correct_word } = this.props;
     if (this.state.wordle_active) {
       // Correct Word Guessed
       if (prev_attempts[prev_attempts.length - 1] === correct_word) {
         return true;
       }
       // Ran out of attempts
-      if (prev_attempts.length === max_attempts) {
-        return true;
-      }
+      // if (prev_attempts.length === show_on_screen) {
+      //   return true;
+      // }
     }
     return false;
   }
 
   renderRemainingAttempts() {
-    const { prev_attempts, cur_attempt, max_attempts, correct_word } =
+    const { prev_attempts, cur_attempt, show_on_screen, correct_word } =
       this.props;
-    if (max_attempts - (prev_attempts.length + 1) >= 0) {
-      return [...new Array(max_attempts - prev_attempts.length).fill("")].map(
+    if (show_on_screen - (prev_attempts.length + 1) >= 0) {
+      return [...new Array(show_on_screen - prev_attempts.length).fill("")].map(
         (empty, index) => {
           if (index === 0 && !this.isGameOver()) {
             return (
@@ -75,8 +73,9 @@ class Wordle extends React.Component {
   }
 
   render() {
-    const { prev_attempts, correct_word, max_attempts, cur_attempt } =
+    const { prev_attempts, correct_word, show_on_screen, cur_attempt } =
       this.props;
+    // console.log(prev_attempts);
     return (
       <div className="wordle">
         {prev_attempts.map((attempt) => {
