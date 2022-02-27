@@ -15,14 +15,15 @@ class Game extends React.Component {
       past_guesses: ["ROUND"],
       word_length: 5,
       remaining_guesses: 22,
-      num_of_wordles: 2,
-      words: new Array(2).fill(null).map((word) => this.getRandomWord()),
+      num_of_wordles: 10,
+      words: new Array(10).fill(null).map((word) => this.getRandomWord()),
       closest_wordle: 0
     };
     this.scrollCooldown = undefined;
   }
 
   onKeyPress = (ev) => {
+    console.log(ev.key);
     const { input, word_length, past_guesses, remaining_guesses } = this.state;
 
     if (
@@ -47,6 +48,15 @@ class Game extends React.Component {
         input: "",
         remaining_guesses: remaining_guesses - 1
       });
+    }
+    if (ev.key == "ArrowLeft") {
+      this.scrollToNextWordle(-1, 0);
+    }
+    if (ev.key == "ArrowRight") {
+      this.scrollToNextWordle(1, 0);
+    }
+    if ("1234567890".indexOf(ev.key) != -1) {
+      this.scrollToWordle(ev.key);
     }
   };
 
@@ -86,7 +96,7 @@ class Game extends React.Component {
     });
   };
 
-  scrollToNextWordle = (dir = 0) => {
+  scrollToNextWordle = (dir = 0, speed = 500) => {
     const sortedWordles = this.getSortedWordlePositions();
     // Of the sorted wordles, get the next closest one in our direction.
     const closest_wordle = sortedWordles.find(
@@ -99,13 +109,31 @@ class Game extends React.Component {
       if (closest_wordle.diff !== 0) {
         animateScrollTo([closest_wordle.scrollTo, 0], {
           elementToScroll: window,
-          cancelOnUserAction: false
+          cancelOnUserAction: false,
+          speed,
+          minDuration: 0
         });
       }
     }
   };
 
-  scrollToWordle = (num) => {};
+  scrollToWordle = (num = 1) => {
+    const wordles = this.getWordlePositions();
+
+    // Hacky way to make 0 == 10 and 1 == 0
+    num = num - 1;
+    num = num == -1 ? 9 : num;
+
+    try {
+      animateScrollTo([wordles[num].scrollTo, 0], {
+        elementToScroll: window,
+        cancelOnUserAction: false,
+        speed: 0,
+        minDuration: 0
+      });
+      // window.scrollTo([wordles[num].scrollTo, null]);
+    } catch (err) {}
+  };
 
   onWheel = (ev) => {
     // ev.preventDefault();
