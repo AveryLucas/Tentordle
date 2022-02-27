@@ -100,7 +100,7 @@ class Game extends React.Component {
     const sortedWordles = this.getSortedWordlePositions();
     // Of the sorted wordles, get the next closest one in our direction.
     const closest_wordle = sortedWordles.find(
-      (position) => Math.sign(position.diff) == dir
+      (position) => Math.sign(Math.floor(position.diff)) == dir
     );
 
     // If there is a wordle in our chosen direction, move to it.
@@ -132,7 +132,9 @@ class Game extends React.Component {
         minDuration: 0
       });
       // window.scrollTo([wordles[num].scrollTo, null]);
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   onWheel = (ev) => {
@@ -146,7 +148,6 @@ class Game extends React.Component {
   onScroll = (ev) => {
     this.startScrollTimer();
     const closest_wordle = this.getSortedWordlePositions()[0].index;
-    // console.log();
     if (closest_wordle != this.state.closest_wordle) {
       this.setState({ closest_wordle });
     }
@@ -156,6 +157,7 @@ class Game extends React.Component {
     this.stopScrollTimer();
     this.scrollCooldown = setTimeout(() => {
       this.scrollToNearestWordle();
+      console.log("ad");
     }, 500);
   }
 
