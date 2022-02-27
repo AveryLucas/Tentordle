@@ -5,7 +5,7 @@ import Keyboard from "./Wordle/Keyboard";
 import animateScrollTo from "animated-scroll-to";
 import words from "../words.json";
 import "../css/wordle.css";
-import WordleHistory from "./Wordle/WordleHistory";
+// import WordleHistory from "./Wordle/WordleHistory";
 
 class Game extends React.Component {
   constructor(props) {
@@ -15,10 +15,10 @@ class Game extends React.Component {
       past_guesses: ["ROUND"],
       word_length: 5,
       remaining_guesses: 22,
-      num_of_wordles: 10
+      num_of_wordles: 2,
+      words: new Array(2).fill(null).map((word) => this.getRandomWord()),
+      closest_wordle: 0
     };
-
-    // closest_wordle: 10;
     this.scrollCooldown = undefined;
   }
 
@@ -55,18 +55,21 @@ class Game extends React.Component {
     var difference = (a, b) => b - a;
 
     // Return list of wordles with relevant numbers
-    return Array.from(document.querySelectorAll(".wordle")).map((element) => {
-      const offset = element.offsetLeft + element.offsetWidth / 2;
+    return Array.from(document.querySelectorAll(".wordle")).map((el, i) => {
+      const offset = el.offsetLeft + el.offsetWidth / 2;
       const scrollTo = offset - window.innerWidth / 2;
       return {
         offset,
         scrollTo,
         diff: difference(window.scrollX, scrollTo),
-        element
+        word: this.state.words[i],
+        index: i,
+        element: el
       };
     });
   };
 
+  // Get wordles sorted by distance to center of screen.
   getSortedWordlePositions = () => {
     // Get and sort wordles by distance from current scroll position
     return this.getWordlePositions().sort(
@@ -86,15 +89,15 @@ class Game extends React.Component {
   scrollToNextWordle = (dir = 0) => {
     const sortedWordles = this.getSortedWordlePositions();
     // Of the sorted wordles, get the next closest one in our direction.
-    const closestWordle = sortedWordles
-      // .slice(1)
-      .find((position) => Math.sign(position.diff) == dir);
+    const closest_wordle = sortedWordles.find(
+      (position) => Math.sign(position.diff) == dir
+    );
 
     // If there is a wordle in our chosen direction, move to it.
-    if (closestWordle) {
+    if (closest_wordle) {
       // Don't do anything if we're already there...
-      if (closestWordle.diff !== 0) {
-        animateScrollTo([closestWordle.scrollTo, 0], {
+      if (closest_wordle.diff !== 0) {
+        animateScrollTo([closest_wordle.scrollTo, 0], {
           elementToScroll: window,
           cancelOnUserAction: false
         });
@@ -105,7 +108,7 @@ class Game extends React.Component {
   scrollToWordle = (num) => {};
 
   onWheel = (ev) => {
-    ev.preventDefault();
+    // ev.preventDefault();
     animateScrollTo([window.scrollX + ev.deltaY * 3, 0], {
       elementToScroll: window,
       cancelOnUserAction: false
@@ -114,6 +117,11 @@ class Game extends React.Component {
 
   onScroll = (ev) => {
     this.startScrollTimer();
+    const closest_wordle = this.getSortedWordlePositions()[0];
+    // console.log();
+    if (closest_wordle != this.state.closest_wordle) {
+      this.setState({ closest_wordle });
+    }
   };
 
   startScrollTimer() {
@@ -122,12 +130,15 @@ class Game extends React.Component {
       this.scrollToNearestWordle();
     }, 500);
   }
+
   stopScrollTimer() {
     if (this.scrollCooldown != undefined) {
       clearTimeout(this.scrollCooldown);
       this.scrollCooldown = undefined;
     }
   }
+
+  getRandomWord = () => words[Math.floor(Math.random() * words.length)];
 
   componentDidMount() {
     document.addEventListener("keydown", this.onKeyPress);
@@ -142,20 +153,24 @@ class Game extends React.Component {
   }
 
   render() {
-    const { past_guesses, input, remaining_guesses, num_of_wordles } =
+    const { past_guesses, input, remaining_guesses, num_of_wordles, words } =
       this.state;
     // console.log(past_guesses.slice(past_guesses.length - 2))
     return (
       <div id="game">
-        <WordleHistory history={past_guesses} />
-        <WordleHeader remaining_guesses={remaining_guesses} />
+        <WordleHeader
+          remaining_guesses={remaining_guesses}
+          closest_wordle={this.getSortedWordlePositions()}
+          history={past_guesses}
+          words={words}
+        />
         <WordleGroup
+          num_of_wordles={num_of_wordles}
           past_guesses={past_guesses.slice(
             past_guesses.length - Math.min(past_guesses.length, 7)
           )}
-          // past_guesses={past_guesses.slice(past_guesses.length - 8)}
           input={input}
-          num_of_wordles={1}
+          words={words}
         />
         <Keyboard />
       </div>

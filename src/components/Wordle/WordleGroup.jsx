@@ -1,14 +1,7 @@
 import React from "react";
 import Wordle from "./Wordle";
 import words from "../../words.json";
-// import animateScrollTo from "animated-scroll-to";
-// import { useStoreState, useStoreActions } from "easy-peasy";
-// import { observer } from "mobx-react-lite";
-// import { makeObservable, observable, computed, action, flow } from "mobx";
-// import { observer } from "mobx-react-lite";
-// import scroll from "scroll";
-// import page from "scroll-doc";
-// var page = require('scroll-doc')()
+import { v4 as uuidv4 } from "uuid";
 
 class WordleGroup extends React.Component {
   constructor(props) {
@@ -27,12 +20,13 @@ class WordleGroup extends React.Component {
 
   render() {
     const { past_guesses, input, num_of_wordles } = this.props;
-    console.log(past_guesses);
+    // console.log(past_guesses);
     return (
       <div id="wordle-group">
         {new Array(num_of_wordles).fill("").map((val, index) => {
           return (
             <Wordle
+              key={uuidv4()}
               cur_attempt={input || ""}
               prev_attempts={past_guesses || []}
               show_on_screen={8}

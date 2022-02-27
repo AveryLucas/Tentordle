@@ -1,5 +1,5 @@
 import React from "react";
-// import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4 } from "uuid";
 // import "../css/wordle.css";
 // import WordleRow from "./WordleRow";
 
@@ -16,7 +16,10 @@ class Keyboard extends React.Component {
 
   renderLetter(text, is_wide = false, onClick) {
     return (
-      <span className={`keyboard-letter ${is_wide ? "wide" : ""}`}>
+      <span
+        className={`keyboard-letter ${is_wide ? "wide" : ""}`}
+        key={uuidv4()}
+      >
         <div className="letter">{text}</div>
       </span>
     );
@@ -40,7 +43,11 @@ class Keyboard extends React.Component {
   render() {
     const { prev_attempts, correct_word, max_attempts, cur_attempt } =
       this.props;
-    return <div id="keyboard">{this.renderKeyboard()}</div>;
+    return (
+      <div id="keyboard" key={uuidv4()}>
+        {this.renderKeyboard()}
+      </div>
+    );
   }
 }
 

@@ -19,37 +19,28 @@ class WordleRow extends React.Component {
     return !this.props.is_locked || this.props.word != prevProps.word;
   }
 
-  renderTile(index, letter) {
-    const { correct_word, is_locked } = this.props;
-
-    function getClassName() {
+  doop(word, correct_word) {
+    const is_locked = this.props.is_locked;
+    return word.split("").map((letter, index) => {
       if (!is_locked) {
         if (letter.trim() != "") {
-          return "occupied";
+          return { letter, className: "occupied" };
         } else {
-          return "empty";
+          return { letter, className: "empty" };
         }
       } else {
-        // console.log()
-        if (letter.trim() != "") {
-          if (correct_word[index] == letter) {
-            return "correct";
-          } else if (correct_word.split("").indexOf(letter) != -1) {
-            return "misplaced";
-          } else {
-            return "incorrect";
-          }
+        // This is a catch for wordle rows past the current guessing row early game
+        if (word.trim() == "") {
+          return { letter, className: "empty" };
+        } else if (correct_word[index] == letter) {
+          return { letter, className: "correct" };
+        } else if (correct_word.split("").indexOf(letter) != -1) {
+          return { letter, className: "misplaced" };
         } else {
-          return "empty";
+          return { letter, className: "incorrect" };
         }
       }
-    }
-
-    return (
-      <div key={uuidv4()} className={`tile ${getClassName()}`}>
-        <span className="letter">{letter}</span>
-      </div>
-    );
+    });
   }
 
   render() {
@@ -57,7 +48,13 @@ class WordleRow extends React.Component {
     if (word.length !== 5) word += " ".repeat(5 - word.length);
     return (
       <div className="row">
-        {word.split("").map((letter, index) => this.renderTile(index, letter))}
+        {this.doop(word, this.props.correct_word).map((tile) => {
+          return (
+            <div key={uuidv4()} className={`tile ${tile.className}`}>
+              <span className="letter">{tile.letter}</span>
+            </div>
+          );
+        })}
       </div>
     );
   }

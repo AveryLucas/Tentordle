@@ -1,6 +1,6 @@
 import React from "react";
 import WordleRow from "./WordleRow";
-// import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4 } from "uuid";
 
 class Wordle extends React.Component {
   constructor(props) {
@@ -8,9 +8,7 @@ class Wordle extends React.Component {
     this.state = { wordle_active: true };
   }
 
-  componentDidMount() {
-    console.log(this.props.correct_word);
-  }
+  componentDidMount() {}
 
   componentWillUnmount() {}
 
@@ -52,6 +50,7 @@ class Wordle extends React.Component {
                 word={cur_attempt}
                 correct_word={correct_word}
                 is_locked={false}
+                key={uuidv4()}
               />
             );
             // return this.renderRow(cur_attempt, false);
@@ -62,6 +61,7 @@ class Wordle extends React.Component {
                   word={""}
                   correct_word={correct_word}
                   is_locked={true}
+                  key={uuidv4()}
                   // active={wordle_active}
                 />
               );
@@ -84,9 +84,9 @@ class Wordle extends React.Component {
               word={attempt}
               correct_word={correct_word}
               is_locked={true}
+              key={uuidv4()}
             />
           );
-          // return this.renderRow(attempt, true);
         })}
         {this.renderRemainingAttempts()}
       </div>
