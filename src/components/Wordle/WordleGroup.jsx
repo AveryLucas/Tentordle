@@ -28,7 +28,7 @@ class WordleGroup extends React.Component {
             <Wordle
               key={uuidv4()}
               cur_attempt={input || ""}
-              prev_attempts={past_guesses || []}
+              past_guesses={past_guesses || []}
               show_on_screen={8}
               render_remaining_attempts={true}
               correct_word={this.state.correct_words[index].toUpperCase()}

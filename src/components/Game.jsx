@@ -15,15 +15,15 @@ class Game extends React.Component {
       past_guesses: ["ROUND"],
       word_length: 5,
       remaining_guesses: 22,
-      num_of_wordles: 10,
-      words: new Array(10).fill(null).map((word) => this.getRandomWord()),
+      num_of_wordles: 1,
+      words: new Array(1).fill(null).map((word) => "ASDFG"),
+      // words: new Array(1).fill(null).map((word) => this.getRandomWord()),
       closest_wordle: 0
     };
     this.scrollCooldown = undefined;
   }
 
   onKeyPress = (ev) => {
-    console.log(ev.key);
     const { input, word_length, past_guesses, remaining_guesses } = this.state;
 
     if (
@@ -43,7 +43,9 @@ class Game extends React.Component {
         // past_guesses: [...past_guesses, input],
         past_guesses: [
           ...past_guesses,
-          words[Math.floor(Math.random() * words.length)].toUpperCase()
+          input === ""
+            ? words[Math.floor(Math.random() * words.length)].toUpperCase()
+            : input
         ],
         input: "",
         remaining_guesses: remaining_guesses - 1
@@ -157,7 +159,6 @@ class Game extends React.Component {
     this.stopScrollTimer();
     this.scrollCooldown = setTimeout(() => {
       this.scrollToNearestWordle();
-      console.log("ad");
     }, 500);
   }
 
@@ -186,14 +187,11 @@ class Game extends React.Component {
   render() {
     const { past_guesses, input, remaining_guesses, num_of_wordles, words } =
       this.state;
-    // console.log(past_guesses.slice(past_guesses.length - 2))
     return (
       <div id="game">
         <WordleGroup
           num_of_wordles={num_of_wordles}
-          past_guesses={past_guesses.slice(
-            past_guesses.length - Math.min(past_guesses.length, 7)
-          )}
+          past_guesses={past_guesses}
           input={input}
           words={words}
         />
