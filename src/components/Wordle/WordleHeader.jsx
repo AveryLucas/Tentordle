@@ -21,12 +21,9 @@ class WordleHeader extends React.Component {
 
   render() {
     const { history, closest_wordle, words, correct_word } = this.props;
-    // console.log(words[closest_wordle]);
-    // let closest = closest_wordle == undefined ? 0 : closest_wordle;
-    // console.log(this.props.closest_wordle);
     return (
       <div id="wordle-header">
-        <div id="wordle-history">
+        {/* <div id="wordle-history">
           {history.reverse().map((guess) => {
             return (
               <div>
@@ -40,7 +37,7 @@ class WordleHeader extends React.Component {
               </div>
             );
           })}
-        </div>
+        </div> */}
         <div id="wordle-title">
           <h1>Tentordle</h1>
           <p id="remaining-guesses">

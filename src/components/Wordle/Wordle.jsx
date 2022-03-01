@@ -1,32 +1,28 @@
 import React from "react";
 import WordleRow from "./WordleRow";
 import { v4 as uuidv4 } from "uuid";
-// import Hint from "../../helpers/hints.js";
 import hints from "../../helpers/hints.js";
 
 class Wordle extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { wordle_active: true, hints: [] };
+    this.state = { wordle_active: true, hints: [], last: "" };
   }
 
+  // I know this is bad but the alternative isn't yet clear to me yet. Maybe moving hint logic to WordleGroup file?
+  // I'll think about it after I finish the zoomout overlay component
   componentDidMount() {
-    // console.log(hints.get("TEETH"));
     this.setState({
       hints: hints.getAllHints(
         this.props.past_guesses,
         this.props.correct_word,
-        [...this.state.hints].reverse()
+        this.state.hints
       )
     });
   }
 
-  componentWillUnmount() {}
-
-  componentDidUpdate(prevProps, prevState) {}
-
+  // Deny updates if this wordle is solved...
   shouldComponentUpdate(prevProps) {
-    // Deny updates if this wordle is solved...
     return !this.props.past_guesses.includes(this.props.correct_word);
   }
 
@@ -76,17 +72,25 @@ class Wordle extends React.Component {
     return this.props.correct_word.split("").map((letter, index) => {
       try {
         let at_index = this.state.hints.filter((hint) => hint.at_pos === index);
-        return (
-          <div>
-            {at_index.map((hint) => {
-              return <span className={hint.type}>{hint.letter}</span>;
-            })}
-          </div>
-        );
+        if (at_index.length > 0) {
+          return (
+            <div>
+              {at_index.map((hint) => {
+                return <span className={hint.type}>{hint.letter}</span>;
+              })}
+            </div>
+          );
+        } else {
+          return (
+            <div>
+              <span style={{ opacity: 0 }}>:)</span>
+            </div>
+          );
+        }
       } catch (err) {
         return (
           <div>
-            <span style={{ opacity: 0 }}>0</span>
+            <span style={{ color: "red" }}>ERR</span>
           </div>
         );
       }

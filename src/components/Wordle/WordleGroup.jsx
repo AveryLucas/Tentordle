@@ -20,7 +20,6 @@ class WordleGroup extends React.Component {
 
   render() {
     const { past_guesses, input, num_of_wordles } = this.props;
-    // console.log(past_guesses);
     return (
       <div id="wordle-group">
         {new Array(num_of_wordles).fill("").map((val, index) => {
