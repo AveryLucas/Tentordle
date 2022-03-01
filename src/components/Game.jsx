@@ -15,9 +15,10 @@ class Game extends React.Component {
       past_guesses: ["ROUND"],
       word_length: 5,
       remaining_guesses: 22,
-      num_of_wordles: 1,
-      words: new Array(1).fill(null).map((word) => "ASDFG"),
-      // words: new Array(1).fill(null).map((word) => this.getRandomWord()),
+      num_of_wordles: 10,
+      overlay: false,
+      words: new Array(10).fill(null).map((word) => this.getRandomWord()),
+      // words: new Array(1).fill(null).map((word) => "ASDFG"),
       closest_wordle: 0
     };
     this.scrollCooldown = undefined;
@@ -189,6 +190,12 @@ class Game extends React.Component {
       this.state;
     return (
       <div id="game">
+        <div
+          id="overlay"
+          style={{ display: this.state.overlay ? "block" : "none" }}
+        >
+          <div className="content">ASDASF</div>
+        </div>
         <WordleGroup
           num_of_wordles={num_of_wordles}
           past_guesses={past_guesses}
