@@ -142,10 +142,10 @@ class Game extends React.Component {
 
   onWheel = (ev) => {
     // ev.preventDefault();
-    animateScrollTo([window.scrollX + ev.deltaY * 3, 0], {
-      elementToScroll: window,
-      cancelOnUserAction: false
-    });
+    // animateScrollTo([window.scrollX + ev.deltaY * 3, 0], {
+    //   elementToScroll: window,
+    //   cancelOnUserAction: false
+    // });
   };
 
   onScroll = (ev) => {
@@ -190,12 +190,6 @@ class Game extends React.Component {
       this.state;
     return (
       <div id="game">
-        <div
-          id="overlay"
-          style={{ display: this.state.overlay ? "block" : "none" }}
-        >
-          <div className="content">ASDASF</div>
-        </div>
         <WordleGroup
           num_of_wordles={num_of_wordles}
           past_guesses={past_guesses}
