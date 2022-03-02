@@ -1,7 +1,7 @@
 import React from "react";
-import WordleGroup from "./Wordle/WordleGroup";
-import WordleHeader from "./Wordle/WordleHeader";
-import Keyboard from "./Wordle/Keyboard";
+import WordleGroup from "./Classic/WordleGroup";
+import WordleHeader from "./Classic/WordleHeader";
+import Keyboard from "./Classic/Keyboard";
 import animateScrollTo from "animated-scroll-to";
 import words from "../words.json";
 import "../css/wordle.css";
@@ -190,18 +190,18 @@ class Game extends React.Component {
       this.state;
     return (
       <div id="game">
-        <WordleGroup
+        {/* <WordleGroup
           num_of_wordles={num_of_wordles}
           past_guesses={past_guesses}
           input={input}
           words={words}
-        />
-        <WordleHeader
+        /> */}
+        {/* <WordleHeader
           remaining_guesses={remaining_guesses}
           closest_wordle={this.state.closest_wordle}
           history={past_guesses}
           words={words}
-        />
+        /> */}
         <Keyboard
           closest_wordle={this.state.closest_wordle}
           past_guesses={past_guesses}
