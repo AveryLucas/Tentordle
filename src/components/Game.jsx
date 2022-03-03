@@ -1,11 +1,13 @@
 import React from "react";
-import WordleGroup from "./Classic/WordleGroup";
-import WordleHeader from "./Classic/WordleHeader";
-import Keyboard from "./Classic/Keyboard";
-import animateScrollTo from "animated-scroll-to";
+// import WordleGroup from "./Classic/WordleGroup";
+// import WordleHeader from "./Classic/WordleHeader";
+// import Keyboard from "./Classic/Keyboard";
+// import animateScrollTo from "animated-scroll-to";
 import words from "../words.json";
 import "../css/wordle.min.css";
 import MiniWordle from "./Wordle/MiniWordle";
+import Wordle from "./Wordle/Wordle";
+import Keyboard from "./Wordle/Keyboard";
 // import WordleHistory from "./Wordle/WordleHistory";
 
 class Game extends React.Component {
@@ -67,12 +69,12 @@ class Game extends React.Component {
           {new Array(10).fill("").map((val, i) => {
             return <MiniWordle index={i} renderBackdrop={i == 0} />;
           })}
+          {/* <Wordle /> */}
         </div>
-        {/* <Keyboard
-          closest_wordle={this.state.closest_wordle}
-          past_guesses={past_guesses}
-          words={words}
-        /> */}
+        <div id="selected">
+          <Wordle />
+          <Keyboard />
+        </div>
       </div>
     );
   }

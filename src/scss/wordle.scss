@@ -64,6 +64,7 @@
   height: 100%;
   display: flex;
   font-size: $smallTextSize;
+  justify-content: space-between;
   z-index: 2;
 
   .wordle-col {
@@ -97,5 +98,82 @@
         background: #c4c4c4;
       }
     }
+  }
+}
+
+.wordle {
+  font-weight: bold;
+  user-select: none;
+  max-width: 300px;
+  width: 100%;
+
+  .wordle-col {
+    flex-basis: 50px;
+    flex-grow: 0;
+  }
+
+  .tile {
+    width: 50px;
+    height: 50px;
+    border: 1.5px solid #d3d6da;
+    margin-top: 2.5px;
+    border-radius: 3px;
+    color: #393e4c;
+    display: flex;
+    color: white;
+
+    .letter {
+      margin: auto;
+      font-weight: bold;
+      font-size: 32px;
+      height: 100%;
+      width: 100%;
+      text-align: center;
+      vertical-align: middle;
+    }
+  }
+}
+
+#keyboard {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  // width: 100%;
+  // padding-bottom: 10px;
+
+  .keyboard-letter {
+    display: inline-flex;
+    width: 43px;
+    height: 58px;
+    margin: 3px;
+    border-radius: 4px;
+    background: #d3d6da;
+    color: #393e4c;
+    cursor: pointer;
+
+    &.wide {
+      width: 65px;
+    }
+
+    .letter {
+      margin: auto;
+      font-weight: bold;
+      font-size: 14px;
+      user-select: none;
+    }
+  }
+}
+
+#selected {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  padding: 15px;
+
+  .wordle {
+    margin-bottom: 30px;
   }
 }
