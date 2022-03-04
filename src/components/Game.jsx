@@ -69,7 +69,19 @@ class Game extends React.Component {
               />
             );
           })}
-          {/* <Wordle /> */}
+        </div>
+        <div id="input-history">
+          {this.state.past_guesses
+            .reverse()
+            .slice(0, 8)
+            .map((guess, index) => (
+              <div
+                className="prev-input"
+                style={{ opacity: (100 - (90 / 7) * index) / 100 }}
+              >
+                {guess}
+              </div>
+            ))}
         </div>
         <div id="selected">
           <Wordle
