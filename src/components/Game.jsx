@@ -15,11 +15,9 @@ class Game extends React.Component {
     super(props);
     this.state = {
       input: "",
-      past_guesses: [""],
+      past_guesses: [this.getRandomWord()],
       words: new Array(10).fill(null).map((word) => this.getRandomWord())
-      // words: new Array(1).fill(null).map((word) => "ASDFG"),
     };
-    this.scrollCooldown = undefined;
   }
 
   onKeyPress = (ev) => {
@@ -27,7 +25,7 @@ class Game extends React.Component {
 
     if (
       ev.key.match(/^[A-Za-z]+$/) &&
-      input.length < word_length &&
+      input.length < 5 &&
       ev.key.length === 1
     ) {
       this.setState({ input: this.state.input + ev.key.toUpperCase() });
@@ -67,12 +65,23 @@ class Game extends React.Component {
       <div id="game">
         <div className="wordle-group">
           {new Array(10).fill("").map((val, i) => {
-            return <MiniWordle index={i} renderBackdrop={i == 0} />;
+            return (
+              <MiniWordle
+                index={i}
+                renderBackdrop={i == 0}
+                past_guesses={this.state.past_guesses}
+                correct_word={this.state.words[i]}
+              />
+            );
           })}
           {/* <Wordle /> */}
         </div>
         <div id="selected">
-          <Wordle />
+          <Wordle
+            input={this.state.input}
+            past_guesses={this.state.past_guesses}
+            correct_word={this.state.words[0]}
+          />
           <Keyboard />
         </div>
       </div>

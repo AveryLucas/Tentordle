@@ -1,41 +1,44 @@
 import React from "react";
 import { v4 as uuidv4 } from "uuid";
+import HintHelper from "../../helpers/hints";
 
 class SelectedWordle extends React.Component {
   constructor(props) {
     super(props);
   }
 
-  renderColumn(hints = "", status = "") {
+  renderColumn(letter = "", hints = []) {
     return (
       <div key={uuidv4()} className="wordle-col">
         <div className="hints">
-          {hints.split("").map((letter) => {
-            return <span>{letter}</span>;
+          {hints.map((hint) => {
+            return <span className={hint.type}>{hint.letter}</span>;
           })}
         </div>
-        <div className="tile">
-          <span className="letter"></span>
+        <div className={`tile ${letter != "" ? "occupied" : ""}`}>
+          <span className={`letter`}>{letter}</span>
         </div>
       </div>
     );
   }
 
-  // range = (num) => this.randomInbetween(-num, num);
-
-  // randomInbetween = (min, max) =>
-  //   Math.floor(Math.random() * (max - min + 1) + min);
+  renderAllColumns = () => {
+    const { past_guesses, correct_word } = this.props;
+    const hints = HintHelper.getAllHints(past_guesses, correct_word);
+    return correct_word.split("").map((letter, index) =>
+      this.renderColumn(
+        this.props.input[index],
+        hints.filter((hint) => hint.at_pos == index)
+      )
+    );
+  };
 
   render() {
     return (
-      <div className="wordle">
+      <div className={`wordle ${this.props.mini ? "mini" : ""}`}>
         <div className="wordle-container">
           <div className="wordle-hints-container">
-            {this.renderColumn("F", "A")}
-            {this.renderColumn("A")}
-            {this.renderColumn("D")}
-            {this.renderColumn("GSA")}
-            {this.renderColumn("S")}
+            {this.renderAllColumns()}
           </div>
         </div>
       </div>

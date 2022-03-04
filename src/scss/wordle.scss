@@ -131,6 +131,11 @@
       text-align: center;
       vertical-align: middle;
     }
+
+    &.occupied {
+      color: #393e4c;
+      border-color: #878a8c;
+    }
   }
 }
 
@@ -175,5 +180,17 @@
 
   .wordle {
     margin-bottom: 30px;
+  }
+}
+
+.hints {
+  .correct {
+    color: $correct;
+  }
+  .incorrect {
+    color: $incorrect;
+  }
+  .misplaced {
+    color: $misplaced;
   }
 }
