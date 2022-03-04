@@ -1,14 +1,9 @@
 import React from "react";
-// import WordleGroup from "./Classic/WordleGroup";
-// import WordleHeader from "./Classic/WordleHeader";
-// import Keyboard from "./Classic/Keyboard";
-// import animateScrollTo from "animated-scroll-to";
 import words from "../words.json";
 import "../css/wordle.min.css";
 import MiniWordle from "./Wordle/MiniWordle";
 import Wordle from "./Wordle/Wordle";
 import Keyboard from "./Wordle/Keyboard";
-// import WordleHistory from "./Wordle/WordleHistory";
 
 class Game extends React.Component {
   constructor(props) {
