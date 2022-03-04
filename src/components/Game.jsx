@@ -89,7 +89,10 @@ class Game extends React.Component {
             past_guesses={this.state.past_guesses}
             correct_word={this.state.words[0]}
           />
-          <Keyboard />
+          <Keyboard
+            past_guesses={this.state.past_guesses}
+            correct_word={this.state.words[0]}
+          />
         </div>
       </div>
     );
