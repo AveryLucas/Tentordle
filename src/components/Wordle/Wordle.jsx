@@ -2,17 +2,19 @@ import React from "react";
 import { v4 as uuidv4 } from "uuid";
 import HintHelper from "../../helpers/hints";
 
-class SelectedWordle extends React.Component {
+class Wordle extends React.Component {
   constructor(props) {
     super(props);
   }
 
   renderColumn(letter = "", hints = []) {
+    hints = hints.length == 0 ? ["N/A"] : hints;
     return (
       <div key={uuidv4()} className="wordle-col">
         <div className="hints">
           {hints.map((hint) => {
-            return <span className={hint.type}>{hint.letter}</span>;
+            if (hint == "N/A") return <span style={{ opacity: 0 }}>:]</span>;
+            else return <span className={hint.type}>{hint.letter}</span>;
           })}
         </div>
         <div className={`tile ${letter != "" ? "occupied" : ""}`}>
@@ -21,7 +23,6 @@ class SelectedWordle extends React.Component {
       </div>
     );
   }
-
   renderAllColumns = () => {
     const { past_guesses, correct_word } = this.props;
     const hints = HintHelper.getAllHints(past_guesses, correct_word);
@@ -41,9 +42,11 @@ class SelectedWordle extends React.Component {
             {this.renderAllColumns()}
           </div>
         </div>
+        <div className="doop"></div>
+        <div className="doop t2"></div>
       </div>
     );
   }
 }
 
-export default SelectedWordle;
+export default Wordle;
