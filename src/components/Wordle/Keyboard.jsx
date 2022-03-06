@@ -38,7 +38,7 @@ class Keyboard extends React.Component {
       return (
         <div>
           {row.split("").map((letter) => {
-            if (letter == "1") return this.renderLetter("Enter");
+            if (letter == "1") return this.renderLetter("Enter", true);
             if (letter == "2") return this.renderLetter("Back", true);
             return this.renderLetter(
               letter,
