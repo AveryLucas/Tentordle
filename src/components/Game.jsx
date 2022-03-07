@@ -147,6 +147,20 @@ class Game extends React.Component {
             correct_word={this.state.words[0]}
           />
         </div>
+        <p
+          style={{
+            position: "fixed",
+            bottom: 0,
+            left: 0,
+            padding: "15px",
+            margin: 0,
+            fontWeight: "bold",
+            // color: "red",
+            opacity: .9
+          }}
+        >
+          This game is being developed <i>live</i> and may change at any time!
+        </p>
       </div>
     );
   }
