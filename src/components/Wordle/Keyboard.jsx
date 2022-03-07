@@ -27,7 +27,7 @@ class Keyboard extends React.Component {
             guess
               .split("")
               .filter(
-                (letter) => this.props.correct_word.indexOf(letter) === -1
+                (letter) => this.props.correct_word || "".indexOf(letter) === -1
               )
           )
           .flat()

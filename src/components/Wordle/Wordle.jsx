@@ -1,10 +1,14 @@
 import React from "react";
 import { v4 as uuidv4 } from "uuid";
 import HintHelper from "../../helpers/hints";
+import anime from "animejs";
 
 class Wordle extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      wobble: 0
+    };
   }
 
   renderColumn(letter = "", hints = []) {
@@ -25,8 +29,8 @@ class Wordle extends React.Component {
   }
   renderAllColumns = () => {
     const { past_guesses, correct_word } = this.props;
-    const hints = HintHelper.getAllHints(past_guesses, correct_word);
-    return correct_word.split("").map((letter, index) =>
+    const hints = HintHelper.getAllHints(past_guesses, correct_word || ".....");
+    return (correct_word || ".....").split("").map((letter, index) =>
       this.renderColumn(
         this.props.input[index],
         hints.filter((hint) => hint.at_pos == index)
@@ -34,9 +38,18 @@ class Wordle extends React.Component {
     );
   };
 
+  setWobble(wobble) {
+    this.setState({ wobble });
+  }
+
   render() {
     return (
-      <div className={`wordle ${this.props.mini ? "mini" : ""}`}>
+      <div
+        className={`wordle`}
+        onClick={() => this.setWobble(1)}
+        onAnimationEnd={() => this.setWobble(0)}
+        wobble={this.state.wobble}
+      >
         <div className="wordle-container">
           <div className="wordle-hints-container">
             {this.renderAllColumns()}

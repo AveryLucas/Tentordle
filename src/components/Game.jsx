@@ -1,5 +1,5 @@
 import React from "react";
-import words from "../words.json";
+import dictionary from "../words.json";
 import "../css/wordle.min.css";
 import MiniWordle from "./Wordle/MiniWordle";
 import Wordle from "./Wordle/Wordle";
@@ -12,7 +12,8 @@ class Game extends React.Component {
       input: "",
       past_guesses: [this.getRandomWord()],
       selected: 0,
-      words: new Array(10).fill(null).map((word) => this.getRandomWord())
+      words: new Array(10).fill(null).map((word) => this.getRandomWord()),
+      solved: []
     };
   }
 
@@ -33,11 +34,12 @@ class Game extends React.Component {
     }
     if (ev.key === "Enter") {
       this.setState({
-        // past_guesses: [...past_guesses, input],
         past_guesses: [
           ...past_guesses,
           input === ""
-            ? words[Math.floor(Math.random() * words.length)].toUpperCase()
+            ? dictionary[
+                Math.floor(Math.random() * dictionary.length)
+              ].toUpperCase()
             : input
         ],
         input: ""
@@ -63,7 +65,7 @@ class Game extends React.Component {
   };
 
   getRandomWord = () =>
-    words[Math.floor(Math.random() * words.length)].toUpperCase();
+    dictionary[Math.floor(Math.random() * dictionary.length)].toUpperCase();
 
   componentDidMount() {
     document.addEventListener("keydown", this.onKeyPress);
@@ -75,12 +77,23 @@ class Game extends React.Component {
     document.removeEventListener("wheel", this.onWheel);
   }
 
+  removeWordleIndex = (arg_word) => {
+    const { solved, words } = this.state;
+    const index = words.indexOf(arg_word);
+    if (index !== -1) {
+      this.setState({
+        solved: Array.from(new Set([...solved, words[index].toUpperCase()])),
+        words: words.filter((word) => word !== arg_word)
+      });
+    }
+  };
+
   clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 
   getStyles() {
     const wordle =
       document.querySelectorAll(".mini-wordle")[this.state.selected || 0];
-    // console.log({ wordle });
+
     try {
       return {
         top: wordle.offsetTop,
@@ -98,12 +111,14 @@ class Game extends React.Component {
       <div id="game">
         <div className="highlight" style={this.getStyles()}></div>
         <div className="wordle-group">
-          {new Array(10).fill("").map((val, i) => {
+          {this.state.words.map((word, i) => {
             return (
               <MiniWordle
                 index={i}
+                key={Math.floor(Math.random() * 99999999)}
                 past_guesses={this.state.past_guesses}
-                correct_word={this.state.words[i]}
+                correct_word={word}
+                removeWordleIndex={this.removeWordleIndex}
               />
             );
           })}
