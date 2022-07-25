@@ -64,17 +64,6 @@ class MiniWordle extends React.Component {
           height: `${this.state.height}px` || "auto",
           margin: this.state.height == 0 ? this.state.height : undefined,
         }}
-        onAnimationEnd={() => {
-          if (this.state.errorFix == 0) {
-            this.setState({ errorFix: 1, doop: 0, opacity: 0 });
-            setTimeout(() => {
-              this.setState({ height: 0 });
-            }, 500);
-            setTimeout(() => {
-              this.props.removeWordleIndex(this.props.correct_word);
-            }, 1100);
-          }
-        }}
       >
         <div
           className="wordle-container"

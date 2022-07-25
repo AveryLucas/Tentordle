@@ -32,7 +32,7 @@ class Game extends React.Component {
       this.setState({ input: input.substring(0, input.length - 1) });
     }
 
-    if (ev.key === "Enter" && ev.ctrlKey) {
+    if (ev.key === "Enter") {
       if (ev.ctrlKey) {
         this.setState({
           past_guesses: [
@@ -45,7 +45,7 @@ class Game extends React.Component {
         });
       } else {
         this.setState({
-          past_guesses: [...past_guesses, input],
+          past_guesses: [...past_guesses, input.toUpperCase()],
           input: "",
         });
       }

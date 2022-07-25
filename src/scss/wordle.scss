@@ -1,11 +1,24 @@
 @import "./variables";
 
+// #root {
+//   height: 100vh;
+
+//   .App,
+//   #game {
+//     height: 100%;
+//   }
+// }
+
+#game {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
 .wordle-group {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 0 auto;
-  padding: 50px;
 
   .mini-wordle {
     margin-bottom: $spaceBetween;
@@ -212,10 +225,11 @@
 #selected {
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;
   align-items: center;
-  width: 100%;
+  flex-grow: 1;
 
-  position: fixed;
+  position: sticky;
   bottom: 0;
   padding: 15px;
 
