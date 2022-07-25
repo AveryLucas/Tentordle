@@ -10,7 +10,7 @@ class Game extends React.Component {
     super(props);
     this.state = {
       input: "",
-      past_guesses: [this.getRandomWord()],
+      past_guesses: [],
       selected: 0,
       words: new Array(5).fill(null).map((word) => this.getRandomWord()),
       solved: [],
@@ -25,25 +25,30 @@ class Game extends React.Component {
       input.length < 5 &&
       ev.key.length === 1
     ) {
-      this.setState({ input: this.state.input + ev.key.toUpperCase() });
+      this.setState({ input: input + ev.key.toUpperCase() });
     }
+
     if (ev.key === "Backspace") {
-      this.setState({
-        input: this.state.input.substring(0, input.length - 1),
-      });
+      this.setState({ input: input.substring(0, input.length - 1) });
     }
-    if (ev.key === "Enter") {
-      this.setState({
-        past_guesses: [
-          ...past_guesses,
-          input === ""
-            ? dictionary[
-                Math.floor(Math.random() * dictionary.length)
-              ].toUpperCase()
-            : input,
-        ],
-        input: "",
-      });
+
+    if (ev.key === "Enter" && ev.ctrlKey) {
+      if (ev.ctrlKey) {
+        this.setState({
+          past_guesses: [
+            ...past_guesses,
+            dictionary[
+              Math.floor(Math.random() * dictionary.length)
+            ].toUpperCase(),
+          ],
+          input: "",
+        });
+      } else {
+        this.setState({
+          past_guesses: [...past_guesses, input],
+          input: "",
+        });
+      }
     }
 
     if ("1234567890".indexOf(ev.key) != -1) {
