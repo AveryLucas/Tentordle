@@ -7,7 +7,7 @@ class Wordle extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      wobble: 0
+      wobble: 0,
     };
   }
 
@@ -30,12 +30,28 @@ class Wordle extends React.Component {
   renderAllColumns = () => {
     const { past_guesses, correct_word } = this.props;
     const hints = HintHelper.getAllHints(past_guesses, correct_word || ".....");
-    return (correct_word || ".....").split("").map((letter, index) =>
-      this.renderColumn(
-        this.props.input[index],
-        hints.filter((hint) => hint.at_pos == index)
-      )
-    );
+    return (correct_word || ".....").split("").map((letter, index) => {
+      const currentLetter = this.props.input[index] || "";
+      const hintsAtPos = hints.filter((hint) => hint.at_pos == index);
+
+      return (
+        <div key={`wordle_col_${index}`} className="wordle-col">
+          <div className="hints">
+            {hintsAtPos.map((hint, index) => {
+              if (hint !== "N/A")
+                return (
+                  <span key={`hint_letter_${index}`} className={hint.type}>
+                    {hint.letter}
+                  </span>
+                );
+            })}
+          </div>
+          <div className={`tile ${currentLetter != "" ? "occupied" : ""}`}>
+            <span className={`letter`}>{currentLetter}</span>
+          </div>
+        </div>
+      );
+    });
   };
 
   setWobble(wobble) {
@@ -50,13 +66,17 @@ class Wordle extends React.Component {
         onAnimationEnd={() => this.setWobble(0)}
         wobble={this.state.wobble}
       >
+        <div className="doop">
+          <div></div>
+        </div>
         <div className="wordle-container">
           <div className="wordle-hints-container">
             {this.renderAllColumns()}
           </div>
         </div>
-        <div className="doop"></div>
-        <div className="doop t2"></div>
+        <div className="doop">
+          <div></div>
+        </div>
       </div>
     );
   }

@@ -7,13 +7,16 @@ class Keyboard extends React.Component {
   }
 
   renderLetter(text, is_wide = false, isIncorrect = false) {
+    const classNames = [
+      "keyboard-letter",
+      is_wide ? "wide" : "",
+      isIncorrect ? "incorrect" : "",
+    ]
+      .join(" ")
+      .trim();
+
     return (
-      <span
-        className={`keyboard-letter ${is_wide ? "wide" : ""} ${
-          isIncorrect ? "incorrect" : ""
-        }`}
-        key={uuidv4()}
-      >
+      <span className={classNames} key={uuidv4()}>
         <div className="letter">{text}</div>
       </span>
     );
@@ -27,23 +30,24 @@ class Keyboard extends React.Component {
             guess
               .split("")
               .filter(
-                (letter) => this.props.correct_word || "".indexOf(letter) === -1
-              )
+                (letter) =>
+                  this.props.correct_word || "".indexOf(letter) === -1,
+              ),
           )
-          .flat()
-      )
+          .flat(),
+      ),
     );
     const rows = ["QWERTYUIOP", "ASDFGHJKL", "1ZXCVBNM2"];
     return rows.map((row, index) => {
       return (
-        <div>
+        <div key={uuidv4()}>
           {row.split("").map((letter) => {
             if (letter == "1") return this.renderLetter("Enter", true);
             if (letter == "2") return this.renderLetter("Back", true);
             return this.renderLetter(
               letter,
               false,
-              isIncorrect.indexOf(letter) !== -1
+              isIncorrect.indexOf(letter) !== -1,
             );
           })}
         </div>

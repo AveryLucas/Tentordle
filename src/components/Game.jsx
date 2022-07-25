@@ -12,13 +12,13 @@ class Game extends React.Component {
       input: "",
       past_guesses: [this.getRandomWord()],
       selected: 0,
-      words: new Array(10).fill(null).map((word) => this.getRandomWord()),
-      solved: []
+      words: new Array(5).fill(null).map((word) => this.getRandomWord()),
+      solved: [],
     };
   }
 
   onKeyPress = (ev) => {
-    const { input, past_guesses, selected } = this.state;
+    const { input, past_guesses, selected, words } = this.state;
 
     if (
       ev.key.match(/^[A-Za-z]+$/) &&
@@ -29,7 +29,7 @@ class Game extends React.Component {
     }
     if (ev.key === "Backspace") {
       this.setState({
-        input: this.state.input.substring(0, input.length - 1)
+        input: this.state.input.substring(0, input.length - 1),
       });
     }
     if (ev.key === "Enter") {
@@ -40,27 +40,38 @@ class Game extends React.Component {
             ? dictionary[
                 Math.floor(Math.random() * dictionary.length)
               ].toUpperCase()
-            : input
+            : input,
         ],
-        input: ""
+        input: "",
       });
     }
 
     if ("1234567890".indexOf(ev.key) != -1) {
-      this.setState({ selected: Number(ev.key) });
+      this.setState({
+        selected: this.clamp(Number(ev.key) - 1, 0, words.length - 1),
+      });
     }
 
     if (ev.key === "ArrowDown") {
-      this.setState({ selected: this.clamp(selected + 1, 0, 9) });
+      this.setState({
+        selected: this.clamp(selected + 1, 0, words.length - 1),
+      });
     }
     if (ev.key === "ArrowUp") {
-      this.setState({ selected: this.clamp(selected - 1, 0, 9) });
+      this.setState({
+        selected: this.clamp(selected - 1, 0, words.length - 1),
+      });
     }
   };
 
   onWheel = (ev) => {
+    const { selected, words } = this.state;
     this.setState({
-      selected: this.clamp(this.state.selected + Math.sign(ev.deltaY), 0, 9)
+      selected: this.clamp(
+        selected + Math.sign(ev.deltaY),
+        0,
+        words.length - 1,
+      ),
     });
   };
 
@@ -83,7 +94,7 @@ class Game extends React.Component {
     if (index !== -1) {
       this.setState({
         solved: Array.from(new Set([...solved, words[index].toUpperCase()])),
-        words: words.filter((word) => word !== arg_word)
+        words: words.filter((word) => word !== arg_word),
       });
     }
   };
@@ -99,7 +110,7 @@ class Game extends React.Component {
         top: wordle.offsetTop,
         left: wordle.offsetLeft,
         height: `${wordle.offsetHeight}px`,
-        width: `${wordle.offsetWidth}px`
+        width: `${wordle.offsetWidth}px`,
       };
     } catch (err) {
       return {};
@@ -123,19 +134,6 @@ class Game extends React.Component {
             );
           })}
         </div>
-        <div id="input-history">
-          {this.state.past_guesses
-            .reverse()
-            .slice(0, 8)
-            .map((guess, index) => (
-              <div
-                className="prev-input"
-                style={{ opacity: (100 - (90 / 7) * index) / 100 }}
-              >
-                {guess}
-              </div>
-            ))}
-        </div>
         <div id="selected">
           <Wordle
             input={this.state.input}
@@ -147,20 +145,6 @@ class Game extends React.Component {
             correct_word={this.state.words[0]}
           />
         </div>
-        <p
-          style={{
-            position: "fixed",
-            bottom: 0,
-            left: 0,
-            padding: "15px",
-            margin: 0,
-            fontWeight: "bold",
-            // color: "red",
-            opacity: .9
-          }}
-        >
-          This game is being developed <i>live</i> and may change at any time!
-        </p>
       </div>
     );
   }

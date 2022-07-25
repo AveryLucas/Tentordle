@@ -8,14 +8,14 @@ class MiniWordle extends React.Component {
       doop: 0,
       height: undefined,
       opacity: 1,
-      errorFix: 0
+      errorFix: 0,
     };
     this.ref = undefined;
   }
 
   componentDidMount() {
     this.setState({
-      height: this.ref.offsetHeight
+      height: this.ref.offsetHeight,
     });
   }
 
@@ -42,7 +42,7 @@ class MiniWordle extends React.Component {
     return correct_word
       .split("")
       .map((letter, index) =>
-        this.renderColumn(hints.filter((hint) => hint.at_pos == index))
+        this.renderColumn(hints.filter((hint) => hint.at_pos == index)),
       );
   };
 
@@ -62,12 +62,8 @@ class MiniWordle extends React.Component {
         ref={(c) => (this.ref = c)}
         style={{
           height: `${this.state.height}px` || "auto",
-          margin: this.state.height == 0 ? this.state.height : undefined
+          margin: this.state.height == 0 ? this.state.height : undefined,
         }}
-        onClick={() => {
-          this.setDoop(1);
-        }}
-        // onClick={() => this.props.removeWordleIndex(this.props.correct_word)}
         onAnimationEnd={() => {
           if (this.state.errorFix == 0) {
             this.setState({ errorFix: 1, doop: 0, opacity: 0 });
@@ -79,13 +75,12 @@ class MiniWordle extends React.Component {
             }, 1100);
           }
         }}
-        doop={this.state.doop}
       >
         <div
           className="wordle-container"
           style={{ opacity: this.state.opacity }}
         >
-          <p className="wordle-title">{this.props.index}</p>
+          <p className="wordle-title">{this.props.index + 1}</p>
           <div className="wordle-hints-container">
             {this.renderAllColumns()}
           </div>
