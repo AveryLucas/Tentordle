@@ -1,78 +1,62 @@
 import React from "react";
+import { useSelector } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
 import HintHelper from "../../helpers/hints";
 
-class MiniWordle extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      doop: 0,
-      height: undefined,
-      opacity: 1,
-      errorFix: 0,
-    };
-    this.ref = undefined;
-  }
+const MiniWordle = ({ index }) => {
+  const { pastGuesses, wordles } = useSelector((state) => state.wordle);
 
-  componentDidMount() {
-    this.setState({
-      height: this.ref.offsetHeight,
-    });
-  }
-
-  renderColumn(hints = []) {
+  const renderColumn = (hints = []) => {
     hints = hints.length == 0 ? ["N/A"] : hints;
     let type = "";
     return (
-      <div className="wordle-col">
-        {hints.map((hint) => {
-          if (hint == "N/A") return <span style={{ opacity: 0 }}>:]</span>;
-          type = hint.type;
-          return <span className={hint.type}>{hint.letter}</span>;
-        })}
+      <div className="wordle-col" key={uuidv4()}>
+        <div className="hints">
+          {hints.map((hint) => {
+            if (hint != "N/A") {
+              type = hint.type;
+              return (
+                <span className={hint.type} key={uuidv4()}>
+                  {hint.letter}
+                </span>
+              );
+            } else
+              return (
+                <span key={uuidv4()} style={{ opacity: 0 }}>
+                  0
+                </span>
+              );
+          })}
+        </div>
         <div className={`wordle-brights ${type}`}>
           <div />
         </div>
       </div>
     );
-  }
+  };
 
-  renderAllColumns = () => {
-    const { past_guesses, correct_word } = this.props;
-    const hints = HintHelper.getAllHints(past_guesses, correct_word);
-    return correct_word
+  const renderAllColumns = () => {
+    const correctWord = wordles[index];
+    const hints = HintHelper.getAllHints(pastGuesses, correctWord);
+
+    return correctWord
       .split("")
       .map((letter, index) =>
-        this.renderColumn(hints.filter((hint) => hint.at_pos == index)),
+        renderColumn(hints.filter((hint) => hint.at_pos == index)),
       );
   };
 
-  range = (num) => this.randomInbetween(-num, num);
-
-  randomInbetween = (min, max) =>
-    Math.floor(Math.random() * (max - min + 1) + min);
-
-  render() {
-    return (
-      <div
-        className="mini-wordle"
-        ref={(c) => (this.ref = c)}
-        style={{
-          height: `${this.state.height}px` || "auto",
-          margin: this.state.height == 0 ? this.state.height : undefined,
-        }}
-      >
-        <div
-          className="wordle-container"
-          style={{ opacity: this.state.opacity }}
-        >
-          <p className="wordle-title">{this.props.index + 1}</p>
-          <div className="wordle-hints-container">
-            {this.renderAllColumns()}
-          </div>
-        </div>
+  return (
+    <div
+      className="mini-wordle"
+      style={{ background: index % 2 !== 0 ? "#F2F4FF" : ":D" }}
+    >
+      <div className="wordle-container">
+        <p className="wordle-title">{index + 1}</p>
+        <div className="wordle-hints-container">{renderAllColumns()}</div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 export default MiniWordle;

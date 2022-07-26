@@ -1,158 +1,70 @@
-import React from "react";
-import dictionary from "../words.json";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
+
 import "../css/wordle.min.css";
 import MiniWordle from "./Wordle/MiniWordle";
 import Wordle from "./Wordle/Wordle";
 import Keyboard from "./Wordle/Keyboard";
 
-class Game extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      input: "",
-      past_guesses: [],
-      selected: 0,
-      words: new Array(5).fill(null).map((word) => this.getRandomWord()),
-      solved: [],
-    };
-  }
+import {
+  submitRandomGuess,
+  submitInput,
+  addToInput,
+  backspace,
+  setSelected,
+  modifySelected,
+  reset,
+} from "../reducers/wordleSlice";
 
-  onKeyPress = (ev) => {
-    const { input, past_guesses, selected, words } = this.state;
+const Game = () => {
+  const dispatch = useDispatch();
 
-    if (
-      ev.key.match(/^[A-Za-z]+$/) &&
-      input.length < 5 &&
-      ev.key.length === 1
-    ) {
-      this.setState({ input: input + ev.key.toUpperCase() });
-    }
+  useEffect(() => {
+    document.addEventListener("keydown", onKeyPress);
+    return () => document.removeEventListener("keydown", onKeyPress);
+  }, []);
 
-    if (ev.key === "Backspace") {
-      this.setState({ input: input.substring(0, input.length - 1) });
-    }
-
-    if (ev.key === "Enter") {
-      if (ev.ctrlKey) {
-        this.setState({
-          past_guesses: [
-            ...past_guesses,
-            dictionary[
-              Math.floor(Math.random() * dictionary.length)
-            ].toUpperCase(),
-          ],
-          input: "",
-        });
-      } else {
-        this.setState({
-          past_guesses: [...past_guesses, input.toUpperCase()],
-          input: "",
-        });
-      }
-    }
-
-    if ("1234567890".indexOf(ev.key) != -1) {
-      this.setState({
-        selected: this.clamp(Number(ev.key) - 1, 0, words.length - 1),
-      });
-    }
-
-    if (ev.key === "ArrowDown") {
-      this.setState({
-        selected: this.clamp(selected + 1, 0, words.length - 1),
-      });
-    }
-    if (ev.key === "ArrowUp") {
-      this.setState({
-        selected: this.clamp(selected - 1, 0, words.length - 1),
-      });
+  const onKeyPress = (event) => {
+    switch (true) {
+      case event.key === "Backspace":
+        dispatch(backspace());
+        if (event.ctrlKey) dispatch(reset());
+        break;
+      case event.key === "Enter":
+        if (event.ctrlKey) dispatch(submitRandomGuess());
+        else dispatch(submitInput());
+        break;
+      case event.key === "ArrowDown":
+        dispatch(modifySelected(1));
+        break;
+      case event.key === "ArrowUp":
+        dispatch(modifySelected(-1));
+        break;
+      case "1234567890".indexOf(event.key) != -1:
+        dispatch(setSelected(Number(event.key)));
+        break;
+      default:
+        dispatch(addToInput(event.key));
+        break;
     }
   };
 
-  onWheel = (ev) => {
-    const { selected, words } = this.state;
-    this.setState({
-      selected: this.clamp(
-        selected + Math.sign(ev.deltaY),
-        0,
-        words.length - 1,
-      ),
-    });
-  };
+  const { wordles } = useSelector((state) => state.wordle);
 
-  getRandomWord = () =>
-    dictionary[Math.floor(Math.random() * dictionary.length)].toUpperCase();
-
-  componentDidMount() {
-    document.addEventListener("keydown", this.onKeyPress);
-    document.addEventListener("wheel", this.onWheel);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener("keydown", this.onKeyPress);
-    document.removeEventListener("wheel", this.onWheel);
-  }
-
-  removeWordleIndex = (arg_word) => {
-    const { solved, words } = this.state;
-    const index = words.indexOf(arg_word);
-    if (index !== -1) {
-      this.setState({
-        solved: Array.from(new Set([...solved, words[index].toUpperCase()])),
-        words: words.filter((word) => word !== arg_word),
-      });
-    }
-  };
-
-  clamp = (num, min, max) => Math.min(Math.max(num, min), max);
-
-  getStyles() {
-    const wordle =
-      document.querySelectorAll(".mini-wordle")[this.state.selected || 0];
-
-    try {
-      return {
-        top: wordle.offsetTop,
-        left: wordle.offsetLeft,
-        height: `${wordle.offsetHeight}px`,
-        width: `${wordle.offsetWidth}px`,
-      };
-    } catch (err) {
-      return {};
-    }
-  }
-
-  render() {
-    return (
-      <div id="game">
-        <div className="highlight" style={this.getStyles()}></div>
-        <div className="wordle-group">
-          {this.state.words.map((word, i) => {
-            return (
-              <MiniWordle
-                index={i}
-                key={Math.floor(Math.random() * 99999999)}
-                past_guesses={this.state.past_guesses}
-                correct_word={word}
-                removeWordleIndex={this.removeWordleIndex}
-              />
-            );
-          })}
-        </div>
-        <div id="selected">
-          <Wordle
-            input={this.state.input}
-            past_guesses={this.state.past_guesses}
-            correct_word={this.state.words[this.state.selected]}
-          />
-          <Keyboard
-            past_guesses={this.state.past_guesses}
-            correct_word={this.state.words[0]}
-          />
-        </div>
+  return (
+    <div id="game">
+      <div className="wordle-group">
+        {wordles.map((word, index) => {
+          return <MiniWordle word={word} index={index} key={uuidv4()} />;
+        })}
       </div>
-    );
-  }
-}
+      <div id="selected">
+        <Wordle />
+        <Keyboard />
+      </div>
+    </div>
+  );
+};
 
 export default Game;
