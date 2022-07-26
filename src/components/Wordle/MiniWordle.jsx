@@ -21,15 +21,15 @@ class MiniWordle extends React.Component {
 
   renderColumn(hints = []) {
     hints = hints.length == 0 ? ["N/A"] : hints;
+    let type = "";
     return (
       <div className="wordle-col">
-        <div className={`hints`}>
-          {hints.map((hint) => {
-            if (hint == "N/A") return <span style={{ opacity: 0 }}>:]</span>;
-            else return <span className={hint.type}>{hint.letter}</span>;
-          })}
-        </div>
-        <div className={`wordle-brights`}>
+        {hints.map((hint) => {
+          if (hint == "N/A") return <span style={{ opacity: 0 }}>:]</span>;
+          type = hint.type;
+          return <span className={hint.type}>{hint.letter}</span>;
+        })}
+        <div className={`wordle-brights ${type}`}>
           <div />
         </div>
       </div>
@@ -51,10 +51,6 @@ class MiniWordle extends React.Component {
   randomInbetween = (min, max) =>
     Math.floor(Math.random() * (max - min + 1) + min);
 
-  setDoop(doop) {
-    this.setState({ doop });
-  }
-
   render() {
     return (
       <div
@@ -74,7 +70,6 @@ class MiniWordle extends React.Component {
             {this.renderAllColumns()}
           </div>
         </div>
-        <div className="highlight"></div>
       </div>
     );
   }

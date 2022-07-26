@@ -1,7 +1,6 @@
 import React from "react";
 import { v4 as uuidv4 } from "uuid";
 import HintHelper from "../../helpers/hints";
-import anime from "animejs";
 
 class Wordle extends React.Component {
   constructor(props) {
@@ -27,6 +26,7 @@ class Wordle extends React.Component {
       </div>
     );
   }
+
   renderAllColumns = () => {
     const { past_guesses, correct_word } = this.props;
     const hints = HintHelper.getAllHints(past_guesses, correct_word || ".....");
@@ -53,10 +53,6 @@ class Wordle extends React.Component {
       );
     });
   };
-
-  setWobble(wobble) {
-    this.setState({ wobble });
-  }
 
   render() {
     return (

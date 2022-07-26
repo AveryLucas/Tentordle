@@ -19,6 +19,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 50px;
 
   .mini-wordle {
     margin-bottom: $spaceBetween;
@@ -71,7 +72,7 @@
   z-index: 4;
   text-align: center;
   font-size: $smallTextSize;
-  color: #252525;
+  color: #000;
 }
 
 .wordle-hints-container {
@@ -110,7 +111,7 @@
         width: 8px;
         height: 8px;
         border-radius: 7px;
-        background: #252525;
+        // background: #252525;
       }
     }
   }
@@ -213,6 +214,16 @@
       color: white;
     }
 
+    &.misplaced {
+      background: $misplaced;
+      opacity: 1;
+    }
+
+    &.correct {
+      background: $correct;
+      opacity: 1;
+    }
+
     .letter {
       margin: auto;
       font-weight: bold;
@@ -242,7 +253,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
 
+.wordle-col,
+.hints {
   .correct {
     color: $correct;
   }
@@ -251,6 +265,21 @@
   }
   .misplaced {
     color: $misplaced;
+  }
+}
+
+.wordle-brights {
+  > div {
+    background: rgb(0, 0, 0);
+  }
+  &.correct > div {
+    background: $correct;
+  }
+  &.incorrect > div {
+    background: $incorrect;
+  }
+  &.misplaced > div {
+    background: $misplaced;
   }
 }
 
