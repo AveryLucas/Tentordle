@@ -1,4 +1,4 @@
-const findRepeatingLetters = (word) => {
+export const findRepeatingLetters = (word) => {
   let letters = word.split("");
   let letterMap = {};
 
@@ -10,48 +10,59 @@ const findRepeatingLetters = (word) => {
   return letterMap;
 };
 
-const getAllHints = (guesses, word, prev_hints = []) => {
+export const getAllHints = (guesses, word, prev_hints = []) => {
   if (typeof guesses === "string") guesses = [guesses];
   let output = [...prev_hints];
   word.split("").map((letter, index) => {
     output = getHintsAtPos(guesses, word, index, output);
   });
-  return output;
+  return output || [{}];
 };
 
-const getHintsAtPos = (guesses = [], word, at_pos, prev_hints = []) => {
+export const getHintsAtPos = (
+  guesses = [],
+  word,
+  position,
+  prev_hints = [],
+) => {
   let output = [...prev_hints];
 
-  const isHintThere = (letter, at_pos, type, hints) => {
+  const isHintThere = (letter, position, type, hints) => {
     let temp = hints || output;
     if (letter) temp = temp.filter((hint) => hint.letter === letter);
-    if (at_pos) temp = temp.filter((hint) => hint.at_pos === at_pos);
+    if (position) temp = temp.filter((hint) => hint.position === position);
     if (type) temp = temp.filter((hint) => hint.type === type);
     return temp.length;
   };
 
+  // Get all the guessed letter that aren't in the word.
+  getPastGuessLetters(guesses).forEach(({ letter, index }) => {
+    if (word.indexOf(letter) === -1)
+      output.push({ letter, position: -1, type: "incorrect" });
+  });
+
   // Are there guesses with the right letter in position?
-  if (guesses.findIndex((guess) => guess[at_pos] === word[at_pos]) !== -1) {
+  if (guesses.findIndex((guess) => guess[position] === word[position]) !== -1) {
     // Check if this hint is already there first
-    if (!isHintThere(word[at_pos], at_pos, "correct")) {
+    if (!isHintThere(word[position], position, "correct")) {
       output = output.filter(
         (hint) =>
-          (hint.letter !== word[at_pos] && hint.at_pos !== at_pos) ||
+          (hint.letter !== word[position] && hint.position !== position) ||
           hint.type === "correct",
       );
-      output.push({ letter: word[at_pos], at_pos, type: "correct" });
+      output.push({ letter: word[position], position, type: "correct" });
     }
   } else {
     // Are there guesses with the right letter in wrong position?
     guesses
-      .filter((guess) => word.indexOf(guess[at_pos]) !== -1)
+      .filter((guess) => word.indexOf(guess[position]) !== -1)
       .forEach((guess) => {
         if (
-          !isHintThere(guess[at_pos], at_pos, "misplaced") &&
-          isHintThere(guess[at_pos], undefined, "correct") !==
-            findRepeatingLetters(word)[guess[at_pos]]
+          !isHintThere(guess[position], position, "misplaced") &&
+          isHintThere(guess[position], undefined, "correct") !==
+            findRepeatingLetters(word)[guess[position]]
         ) {
-          output.push({ letter: guess[at_pos], at_pos, type: "misplaced" });
+          output.push({ letter: guess[position], position, type: "misplaced" });
         }
       });
   }
@@ -59,7 +70,7 @@ const getHintsAtPos = (guesses = [], word, at_pos, prev_hints = []) => {
   return output;
 };
 
-const getPastGuessLetters = (guesses = []) =>
+export const getPastGuessLetters = (guesses = []) =>
   Array.from(
     new Set(
       guesses
@@ -68,17 +79,17 @@ const getPastGuessLetters = (guesses = []) =>
     ),
   );
 
-const getHintTypes = (pastGuesses, correctWord, target) => {
+export const getHintForLetter = (char, pastGuesses, correctWord) => {
   const pastGuessLetters = getPastGuessLetters(pastGuesses).filter(
-    ({ letter }) => letter == target,
+    ({ letter }) => letter == char,
   );
 
   if (pastGuessLetters.length === 0) return false;
 
   // Check if letter was guessed correctly and in the right spot
   if (
-    pastGuessLetters.filter(({ letter, index }) => {
-      const index2 = correctWord.indexOf(target);
+    pastGuessLetters.filter(({ index }) => {
+      const index2 = correctWord.indexOf(char);
       return index2 !== -1 && index == index2;
     }).length
   ) {
@@ -86,11 +97,11 @@ const getHintTypes = (pastGuesses, correctWord, target) => {
   }
 
   // Check if letter was guessed but was put in the wrong spot
-  if (pastGuessLetters.filter(() => correctWord.indexOf(target) !== -1).length)
+  if (pastGuessLetters.filter(() => correctWord.indexOf(char) !== -1).length)
     return { misplaced: true };
 
   // Check if letter is simply incorrect
-  if (pastGuessLetters.filter(() => correctWord.indexOf(target) === -1).length)
+  if (pastGuessLetters.filter(() => correctWord.indexOf(char) === -1).length)
     return { incorrect: true };
 
   return {};
@@ -99,6 +110,6 @@ const getHintTypes = (pastGuesses, correctWord, target) => {
 export default {
   getAllHints,
   getHintsAtPos,
+  getHintForLetter,
   findRepeatingLetters,
-  getHintTypes,
 };

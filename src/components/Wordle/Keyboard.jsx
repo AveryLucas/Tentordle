@@ -1,32 +1,52 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
 import classNames from "classnames";
 import hints from "../../helpers/hints";
 
+import {
+  submitInput,
+  addToInput,
+  backspace,
+  updateHints,
+} from "../../reducers/wordleSlice";
+
 const Keyboard = () => {
+  const dispatch = useDispatch();
+
   const { pastGuesses, wordles, selected } = useSelector(
     (state) => state.wordle,
   );
 
   const renderLetter = (letter) => {
-    const { incorrect, misplaced, correct } = hints.getHintTypes(
-      pastGuesses,
-      wordles[selected],
-      letter,
-    );
+    // const { incorrect, misplaced, correct } = {};
+    const hints = wordles[selected].hints;
+    const hintsForLetter = hints.filter((hint) => hint.letter == letter);
 
-    const classes = classNames("keyboard-letter", {
+    const classes = classNames({
+      "keyboard-letter": 1,
+      [(hintsForLetter[0] || [{}]).type]: 1,
       wide: ["Enter", "Back"].indexOf(letter) !== -1,
-      incorrect,
-      misplaced,
-      correct,
     });
 
+    const onClick = () => {
+      switch (letter) {
+        case "Enter":
+          dispatch(submitInput());
+          dispatch(updateHints());
+          break;
+        case "Back":
+          dispatch(backspace());
+          break;
+        default:
+          dispatch(addToInput(letter));
+      }
+    };
+
     return (
-      <span className={classes} key={uuidv4()}>
+      <button onClick={onClick} className={classes} key={uuidv4()}>
         <div className="letter">{letter}</div>
-      </span>
+      </button>
     );
   };
 

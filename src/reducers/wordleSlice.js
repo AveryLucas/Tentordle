@@ -1,18 +1,25 @@
 import { createSlice } from "@reduxjs/toolkit";
 import dictionary from "../words.json";
+import { getAllHints } from "../helpers/hints";
 
 const randomWord = () =>
   dictionary[Math.floor(Math.random() * dictionary.length)].toUpperCase();
+
+const generateWordle = () => ({
+  word: randomWord(),
+  queue: [],
+  hints: [{ a: 2 }],
+});
 
 const initialState = {
   input: "",
   pastGuesses: [],
   wordles: [
-    randomWord(),
-    randomWord(),
-    randomWord(),
-    randomWord(),
-    randomWord(),
+    generateWordle(),
+    generateWordle(),
+    generateWordle(),
+    generateWordle(),
+    generateWordle(),
   ],
   selected: 0,
 };
@@ -20,9 +27,18 @@ const initialState = {
 const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 
 export const wordleSlice = createSlice({
-  name: "posts",
+  name: "wordle",
   initialState,
   reducers: {
+    updateHints: (state) => {
+      for (var i = 0; i < state.wordles.length; i++) {
+        state.wordles[i].hints = getAllHints(
+          state.pastGuesses,
+          state.wordles[i].word,
+          state.wordles[i].hints,
+        );
+      }
+    },
     submitRandomGuess: (state) => {
       const rngWord = dictionary[Math.floor(Math.random() * dictionary.length)];
       state.pastGuesses.push(rngWord.toUpperCase());
@@ -54,11 +70,11 @@ export const wordleSlice = createSlice({
     },
     reset: (state) => {
       state.wordles = [
-        randomWord(),
-        randomWord(),
-        randomWord(),
-        randomWord(),
-        randomWord(),
+        generateWordle(),
+        generateWordle(),
+        generateWordle(),
+        generateWordle(),
+        generateWordle(),
       ];
 
       state.pastGuesses = [];
@@ -74,6 +90,7 @@ export const {
   setSelected,
   modifySelected,
   reset,
+  updateHints,
 } = wordleSlice.actions;
 
 export default wordleSlice.reducer;

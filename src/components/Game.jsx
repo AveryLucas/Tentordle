@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
 
 import "../css/wordle.min.css";
-import MiniWordle from "./Wordle/MiniWordle";
 import Wordle from "./Wordle/Wordle";
 import Keyboard from "./Wordle/Keyboard";
 
@@ -15,6 +14,7 @@ import {
   setSelected,
   modifySelected,
   reset,
+  updateHints,
 } from "../reducers/wordleSlice";
 
 const Game = () => {
@@ -34,6 +34,7 @@ const Game = () => {
       case event.key === "Enter":
         if (event.ctrlKey) dispatch(submitRandomGuess());
         else dispatch(submitInput());
+        dispatch(updateHints());
         break;
       case event.key === "ArrowDown":
         dispatch(modifySelected(1));
@@ -50,17 +51,17 @@ const Game = () => {
     }
   };
 
-  const { wordles } = useSelector((state) => state.wordle);
+  const { wordles, selected } = useSelector((state) => state.wordle);
 
   return (
     <div id="game">
       <div className="wordle-group">
         {wordles.map((word, index) => {
-          return <MiniWordle word={word} index={index} key={uuidv4()} />;
+          return <Wordle key={uuidv4()} fullsized={false} index={index} />;
         })}
       </div>
       <div id="selected">
-        <Wordle />
+        <Wordle index={selected} />
         <Keyboard />
       </div>
     </div>
