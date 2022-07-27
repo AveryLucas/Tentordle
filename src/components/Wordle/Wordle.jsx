@@ -1,9 +1,12 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
 import classNames from "classnames";
 
+import { setSelected } from "../../reducers/wordleSlice";
+
 const Wordle = ({ index, fullsized = true }) => {
+  const dispatch = useDispatch();
   const { wordles, input } = useSelector((state) => state.wordle);
 
   const letterOrBright = (letter = "", hints = []) => {
@@ -49,7 +52,7 @@ const Wordle = ({ index, fullsized = true }) => {
   const classes = classNames({ "mini-wordle": !fullsized, wordle: fullsized });
 
   return (
-    <div className={classes}>
+    <div className={classes} onClick={() => dispatch(setSelected(index))}>
       {[wordles[index]].map((wordle, wordleIndex) => {
         return (
           <div className="wordle-container" key={`w_i_${wordleIndex}`}>

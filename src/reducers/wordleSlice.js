@@ -8,7 +8,7 @@ const randomWord = () =>
 const generateWordle = () => ({
   word: randomWord(),
   queue: [],
-  hints: [{ a: 2 }],
+  hints: [{}],
 });
 
 const initialState = {

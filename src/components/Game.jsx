@@ -16,14 +16,21 @@ import {
   reset,
   updateHints,
 } from "../reducers/wordleSlice";
+import Highlight from "./Wordle/Highlight";
 
 const Game = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
     document.addEventListener("keydown", onKeyPress);
-    return () => document.removeEventListener("keydown", onKeyPress);
+    document.addEventListener("wheel", onWheel);
+    return () => {
+      document.removeEventListener("keydown", onKeyPress);
+      document.removeEventListener("wheel", onWheel);
+    };
   }, []);
+
+  const onWheel = (event) => dispatch(modifySelected(Math.sign(event.deltaY)));
 
   const onKeyPress = (event) => {
     switch (true) {
@@ -60,6 +67,7 @@ const Game = () => {
           return <Wordle key={uuidv4()} fullsized={false} index={index} />;
         })}
       </div>
+      <Highlight index={selected} />
       <div id="selected">
         <Wordle index={selected} />
         <Keyboard />

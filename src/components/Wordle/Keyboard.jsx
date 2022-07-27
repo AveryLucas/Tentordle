@@ -19,7 +19,6 @@ const Keyboard = () => {
   );
 
   const renderLetter = (letter) => {
-    // const { incorrect, misplaced, correct } = {};
     const hints = wordles[selected].hints;
     const hintsForLetter = hints.filter((hint) => hint.letter == letter);
 
