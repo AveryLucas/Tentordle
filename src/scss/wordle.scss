@@ -1,14 +1,5 @@
 @import "./variables";
 
-// #root {
-//   height: 100vh;
-
-//   .App,
-//   #game {
-//     height: 100%;
-//   }
-// }
-
 #game {
   display: flex;
   flex-direction: column;
@@ -19,6 +10,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  // position: relative;
   padding: 50px;
 
   .mini-wordle {
@@ -56,6 +48,7 @@
   width: 100%;
   height: 100%;
   display: flex;
+  margin: auto;
   font-size: $smallTextSize;
   justify-content: space-between;
   z-index: 2;
@@ -125,6 +118,14 @@
   font-weight: bold;
   user-select: none;
   width: 100%;
+
+  .wordle-container {
+    display: none;
+  }
+
+  .wordle-container:nth-child(1) {
+    display: flex;
+  }
 
   .doop {
     // right: -50px;
@@ -253,6 +254,9 @@
 
 .wordle-col,
 .hints {
+  * {
+    transition: color 0.3s;
+  }
   > *:empty:before {
     content: "#";
     opacity: 0;
@@ -289,12 +293,30 @@
   transform: translateX(-20px) scaleY(0.5);
   background: #161616;
   border-radius: 20px;
+  animation: 1s linear 0s 1 fadeIn;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.hint-container {
+  display: flex;
+  flex-direction: column;
+  max-height: 14px;
+  justify-content: flex-end;
+  overflow: hidden;
 }
 
 .mini-wordle {
   font-family: "Roboto Condensed", sans-serif;
-
   position: relative;
+
   display: flex;
   overflow: hidden;
   font-weight: bold;
@@ -306,9 +328,54 @@
   width: 100%;
   max-width: 300px;
 
+  .wordle-hints-container {
+    max-width: #{300px - 40px};
+    transition: max-width 2s cubic-bezier(0.85, 0, 0.15, 1) 3s;
+  }
+  $delay: 0.25;
+  $animTime: 0.5;
+  // &[animation-stage="1"] {
+  // .wordle-hints-container {
+  //   max-width: #{(300px - 40px) / 2};
+  // }
+
+  .wordle-col {
+    &[animation-stage="0"] {
+      @for $i from 0 through 4 {
+        &:nth-child(#{$i + 1}n) .wordle-brights {
+          animation: pulse #{$animTime}s cubic-bezier(0.34, 1.56, 0.64, 1);
+          animation-fill-mode: forwards;
+        }
+      }
+    }
+    &[animation-stage="1"] {
+      @for $i from 0 through 4 {
+        &:nth-child(#{$i + 1}n) .wordle-brights-container,
+        &:nth-child(#{$i + 1}n) .wordle-brights {
+          animation: heightToZero
+            #{$animTime}s
+            cubic-bezier(0.34, 1.56, 0.64, 1);
+          animation-fill-mode: forwards;
+        }
+        &:nth-child(#{$i + 1}n) .hints {
+          animation: fontSizeAnimation
+            #{$animTime}s
+            cubic-bezier(0.34, 1.56, 0.64, 1);
+          animation-fill-mode: forwards;
+        }
+        &:nth-child(#{$i + 1}n) .hints span {
+          animation: colorToBlack $animTime linear;
+          animation-fill-mode: forwards;
+        }
+      }
+    }
+  }
+
   .wordle-container {
     display: flex;
     flex-direction: column;
+
+    color: #00000000;
 
     width: calc(100% - 40px);
     max-width: 300px;
@@ -316,10 +383,58 @@
     opacity: 1;
     flex-shrink: 0;
 
-    // transform: translateX(-100%);
+    transform: translateX(-100%);
   }
 
   &:nth-child(even) {
     background: #f2f4ff;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes pulseas {
+  0% {
+    opacity: 0.5 !important;
+  }
+  100% {
+    opacity: 1 !important;
+  }
+}
+
+@keyframes heightToZero {
+  0% {
+    height: 8px;
+  }
+  100% {
+    height: 0;
+  }
+}
+
+@keyframes colorToBlack {
+  100% {
+    color: #000;
+  }
+}
+
+@keyframes fontSizeAnimation {
+  100% {
+    color: #000;
+    font-size: 24px;
+  }
+}
+
+@keyframes translateXToZero {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0%);
   }
 }

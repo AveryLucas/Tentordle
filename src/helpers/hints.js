@@ -37,7 +37,7 @@ export const getHintsAtPos = (
 
   // Get all the guessed letter that aren't in the word.
   getPastGuessLetters(guesses).forEach(({ letter, index }) => {
-    if (word.indexOf(letter) === -1)
+    if (word.indexOf(letter) === -1 && !isHintThere(letter, -1, "incorrect"))
       output.push({ letter, position: -1, type: "incorrect" });
   });
 

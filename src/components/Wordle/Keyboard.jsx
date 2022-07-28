@@ -2,7 +2,6 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
 import classNames from "classnames";
-import hints from "../../helpers/hints";
 
 import {
   submitInput,
@@ -14,9 +13,7 @@ import {
 const Keyboard = () => {
   const dispatch = useDispatch();
 
-  const { pastGuesses, wordles, selected } = useSelector(
-    (state) => state.wordle,
-  );
+  const { wordles, selected } = useSelector((state) => state.wordle);
 
   const renderLetter = (letter) => {
     const hints = wordles[selected].hints;
@@ -49,25 +46,21 @@ const Keyboard = () => {
     );
   };
 
-  const renderKeyboard = () => {
-    const rows = ["QWERTYUIOP", "ASDFGHJKL", "1ZXCVBNM2"];
-
-    return rows.map((row, index) => {
-      return (
-        <div key={uuidv4()}>
-          {row.split("").map((letter) => {
-            if (letter == "1") return renderLetter("Enter");
-            if (letter == "2") return renderLetter("Back");
-            return renderLetter(letter);
-          })}
-        </div>
-      );
-    });
-  };
+  const rows = ["QWERTYUIOP", "ASDFGHJKL", "1ZXCVBNM2"];
 
   return (
     <div id="keyboard" key={uuidv4()}>
-      {renderKeyboard()}
+      {rows.map((row, index) => {
+        return (
+          <div key={uuidv4()}>
+            {row.split("").map((letter) => {
+              if (letter == "1") return renderLetter("Enter");
+              if (letter == "2") return renderLetter("Back");
+              return renderLetter(letter);
+            })}
+          </div>
+        );
+      })}
     </div>
   );
 };

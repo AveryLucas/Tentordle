@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { v4 as uuidv4 } from "uuid";
 
 import "../css/wordle.min.css";
 import Wordle from "./Wordle/Wordle";
 import Keyboard from "./Wordle/Keyboard";
+import anime from "animejs";
 
 import {
   submitRandomGuess,
@@ -15,15 +15,37 @@ import {
   modifySelected,
   reset,
   updateHints,
+  updateHintsAtPosition,
 } from "../reducers/wordleSlice";
+
 import Highlight from "./Wordle/Highlight";
+
+// let interval = undefined;
+
+// const test = () => {
+//   anime.remove([`.mini-wordle .wordle-col`, `.mini-wordle .wordle-col .hints`]);
+
+//   anime({
+//     targets: `.mini-wordle .wordle-col`,
+//     opacity: [0.1, 1],
+//     delay: anime.stagger(250, { grid: [5, 1], from: "first", axis: "x" }),
+//   });
+
+//   anime({
+//     targets: `.mini-wordle .wordle-col .hints`,
+//     scale: [0.5, 1],
+//     delay: anime.stagger(250, { grid: [5, 1], from: "first", axis: "x" }),
+//   });
+// };
 
 const Game = () => {
   const dispatch = useDispatch();
+  const { wordles, selected } = useSelector((state) => state.wordle);
 
   useEffect(() => {
     document.addEventListener("keydown", onKeyPress);
     document.addEventListener("wheel", onWheel);
+    wordles.forEach((wordle) => console.log(wordle.word));
     return () => {
       document.removeEventListener("keydown", onKeyPress);
       document.removeEventListener("wheel", onWheel);
@@ -50,7 +72,7 @@ const Game = () => {
         dispatch(modifySelected(-1));
         break;
       case "1234567890".indexOf(event.key) != -1:
-        dispatch(setSelected(Number(event.key)));
+        dispatch(setSelected(Number(event.key) - 1));
         break;
       default:
         dispatch(addToInput(event.key));
@@ -58,20 +80,25 @@ const Game = () => {
     }
   };
 
-  const { wordles, selected } = useSelector((state) => state.wordle);
-
   return (
     <div id="game">
       <div className="wordle-group">
-        {wordles.map((word, index) => {
-          return <Wordle key={uuidv4()} fullsized={false} index={index} />;
+        {wordles.map((wordle, index) => {
+          return (
+            <Wordle
+              key={wordle.id}
+              renderWordleQueue={true}
+              fullsized={false}
+              index={index}
+            />
+          );
         })}
       </div>
-      <Highlight index={selected} />
       <div id="selected">
-        <Wordle index={selected} />
+        {/* <Wordle index={selected} /> */}
         <Keyboard />
       </div>
+      {/* <Highlight /> */}
     </div>
   );
 };
