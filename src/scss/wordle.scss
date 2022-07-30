@@ -417,22 +417,28 @@
     //   }
     // }
   }
+  &[animation-stage="0"] {
+    .wordle-container {
+      background: #fff;
+    }
+  }
 
   .wordle-container {
     display: flex;
     flex-direction: column;
     transform: translateX(-100%);
     color: #00000000;
+    transition: background 1s linear;
 
     width: calc(100% - 40px);
     max-width: 300px;
     padding: 20px;
+    background: #f6f6f6;
     opacity: 1;
     flex-shrink: 0;
   }
 
   &:nth-child(even) {
-    background: #f2f4ff;
   }
 }
 
