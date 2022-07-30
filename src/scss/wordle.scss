@@ -441,7 +441,7 @@
     max-width: #{(300px - 40px)};
   }
   100% {
-    max-width: #{(300px - 40px) / 2};
+    max-width: #{(300px - 40px) / 2.5};
   }
 }
 
@@ -481,7 +481,7 @@
 
 @keyframes colorToBlack {
   100% {
-    color: #000;
+    color: rgb(51, 51, 51);
   }
 }
 

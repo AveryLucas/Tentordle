@@ -98,7 +98,7 @@ const Game = () => {
         <Wordle index={selected} />
         <Keyboard />
       </div>
-      {/* <Highlight /> */}
+      <Highlight />
     </div>
   );
 };

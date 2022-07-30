@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 const Highlight = () => {
   const { selected } = useSelector((state) => state.wordle);
   const [number, setNumber] = useState(0);
-  useEffect(() => setTimeout(() => setNumber(0), 10), []);
+  useEffect(() => setTimeout(() => setNumber(1), 50), []);
 
   const wordle = document.querySelectorAll(".mini-wordle")[selected] || {};
 
