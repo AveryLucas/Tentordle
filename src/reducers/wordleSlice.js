@@ -6,6 +6,9 @@ import { v4 as uuidv4 } from "uuid";
 const randomWord = () =>
   dictionary[Math.floor(Math.random() * dictionary.length)].toUpperCase();
 
+const generateWordArr = (num) =>
+  new Array(num).fill({}).map(() => randomWord());
+
 const generateWordle = () => ({
   id: uuidv4(),
   word: randomWord(),
@@ -20,7 +23,7 @@ const initialState = {
   pastGuesses: [],
   lastGuess: "",
   wordles: generateWordleArr(5),
-  queue: generateWordleArr(2),
+  queue: generateWordArr(10),
   selected: 0,
 };
 
@@ -43,23 +46,15 @@ export const wordleSlice = createSlice({
         );
       }
     },
-    updateHintsAtPosition: (state, { payload }) => {
-      for (var i = 0; i < state.wordles.length; i++) {
-        // Remove old hints at that position and that are proven to be not in the word.
-        // Removing hints at position -1 because this is the easiest way to prevent adding duplicates.
-        state.wordles[i].hints = state.wordles[i].hints.filter(
-          (hint) => hint.position !== payload || hint.position === -1,
-        );
-
-        // Get updated hints and filter for only the ones at this position
-        const newHints = getAllHints(
+    moveWordleQueueToIndex: (state, { payload }) => {
+      if (state.queue.length !== 0) {
+        state.wordles[payload].word = state.queue.shift();
+        // console.log(current(state.wordles[payload].word));
+        state.wordles[payload].hints = getAllHints(
           state.pastGuesses,
-          state.wordles[i].word,
-          state.wordles[i].hints,
-        ).filter((hint) => hint.position === payload || hint.position === -1);
-
-        // Update state with new and old (but filtered) hints
-        state.wordles[i].hints = [...newHints, ...state.wordles[i].hints];
+          state.wordles[payload].word,
+          [],
+        );
       }
     },
     submitRandomGuess: (state) => {
@@ -117,7 +112,7 @@ export const {
   modifySelected,
   reset,
   updateHints,
-  updateHintsAtPosition,
+  moveWordleQueueToIndex,
 } = wordleSlice.actions;
 
 export default wordleSlice.reducer;

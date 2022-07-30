@@ -87,15 +87,15 @@ const Game = () => {
           return (
             <Wordle
               key={wordle.id}
-              renderWordleQueue={true}
-              fullsized={false}
               index={index}
+              fullsized={false}
+              renderWordleQueue={true}
             />
           );
         })}
       </div>
       <div id="selected">
-        {/* <Wordle index={selected} /> */}
+        <Wordle index={selected} />
         <Keyboard />
       </div>
       {/* <Highlight /> */}
