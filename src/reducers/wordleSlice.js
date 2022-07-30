@@ -24,6 +24,7 @@ const initialState = {
   lastGuess: "",
   wordles: generateWordleArr(5),
   queue: generateWordArr(10),
+  solved: {},
   selected: 0,
 };
 
@@ -59,11 +60,26 @@ export const wordleSlice = createSlice({
     },
     submitRandomGuess: (state) => {
       const rngWord = dictionary[Math.floor(Math.random() * dictionary.length)];
+      for (var i = 0; i < state.wordles.length; i++) {
+        if (rngWord == state.wordles[i].word && !state.solved[rngWord]) {
+          state.solved[rngWord] = 1;
+        }
+      }
+
       state.pastGuesses.push(rngWord.toUpperCase());
       state.input = "";
     },
     submitInput: (state) => {
       if (state.input.length) {
+        for (var i = 0; i < state.wordles.length; i++) {
+          if (
+            state.input == state.wordles[i].word &&
+            !state.solved[state.input]
+          ) {
+            state.solved[state.input] = 1;
+          }
+        }
+
         state.pastGuesses.push(state.input);
         state.input = "";
       }

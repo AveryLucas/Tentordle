@@ -10,15 +10,22 @@ import {
 import WordleColumn from "./WordleColumn";
 
 const Wordle = ({ index, renderWordleQueue = false, fullsized = true }) => {
+  const [lastWord, setLastWord] = useState("");
   const [animationStage, setAnimationStage] = useState(-1);
   const dispatch = useDispatch();
-  const { wordles, input, queue, pastGuesses } = useSelector(
-    (state) => state.wordle,
-  );
+  const { wordles, pastGuesses, solved } = useSelector((state) => state.wordle);
 
   if (
-    [...pastGuesses].reverse()[0] === wordles[index].word &&
-    animationStage == -1
+    lastWord !== [...pastGuesses].reverse()[0] &&
+    Object.keys(solved).length <= 5
+  ) {
+    setLastWord([...pastGuesses].reverse()[0]);
+  }
+
+  if (
+    lastWord === wordles[index].word &&
+    animationStage !== 0 &&
+    Object.keys(solved).length <= 5
   ) {
     setAnimationStage(0);
   }
