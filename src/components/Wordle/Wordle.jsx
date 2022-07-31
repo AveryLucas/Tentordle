@@ -24,13 +24,16 @@ const Wordle = ({ index, renderWordleQueue = false, fullsized = true }) => {
 
   if (
     lastWord === wordles[index].word &&
-    animationStage !== 0 &&
+    animationStage === -1 &&
     Object.keys(solved).length <= 5
   ) {
     setAnimationStage(0);
   }
 
   const onAnimationEnd = (event) => {
+    if (event.animationName == "condenseWord") {
+      setAnimationStage(1);
+    }
     if (event.animationName == "translateXToZero") {
       dispatch(moveWordleQueueToIndex(index));
       setAnimationStage(-1);

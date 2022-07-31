@@ -1,11 +1,21 @@
+$background: #fff;
+
 // Colors
 $tileUnoccupied: #d3d6da;
 $tileOccupied: #393e4c;
 $correct: #26b84f;
 $incorrect: #787c7e;
 $misplaced: #ff8818;
+$keyLetter: #393e4c;
+$keyLetterBackground: #d3d6da;
+$wordleContainerBackground: rgba(211, 214, 218, 0.35);
 
 // Wordle Layout
 $spaceBetween: 10px;
 $smallTextSize: 14px;
+$inputTextSize: 32px;
+$keyboardTextSize: 16px;
 $fullSizedHint: 14px;
+$padding: 20px;
+
+$brightsSize: 8px;

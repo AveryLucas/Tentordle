@@ -25,7 +25,7 @@ const generateNewState = () => ({
   pastGuesses: [],
   lastGuess: "",
   remainingGuesses: 10,
-  wordles: generateWordleArr(5),
+  wordles: generateWordleArr(2),
   queue: generateWordArr(10),
   solved: {},
   selected: 0,
@@ -47,6 +47,7 @@ export const wordleSlice = createSlice({
       }
     },
     moveWordleQueueToIndex: (state, { payload }) => {
+      console.log(payload);
       if (state.queue.length !== 0) {
         state.wordles[payload].word = state.queue.shift();
         // console.log(current(state.wordles[payload].word));
@@ -99,7 +100,7 @@ export const wordleSlice = createSlice({
     modifySelected: (state, { payload }) => {
       const { wordles, selected } = state;
       state.selected = clamp(selected + payload, 0, wordles.length - 1);
-    }
+    },
   },
 });
 

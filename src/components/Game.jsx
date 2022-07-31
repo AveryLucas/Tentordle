@@ -64,10 +64,6 @@ const Game = () => {
 
   return (
     <div id="game">
-      {/* <div id="header">
-        <h1>nine-tordle</h1>
-        <p>Going for the 10 streak? Good Luck...</p>
-      </div> */}
       <div className="wordle-group">
         {wordles.map((wordle, index) => {
           return (
