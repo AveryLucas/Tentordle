@@ -41,6 +41,18 @@ const Keyboard = () => {
 
     return (
       <button onClick={onClick} className={classes} key={uuidv4()}>
+        <div className="letter-hints">
+          {wordles.map((wordle, index) => {
+            const hint =
+              wordle.hints.filter((hint) => hint.letter == letter)[0] || {};
+            return (
+              <div
+                className={hint.type}
+                key={`letter-hint-${letter}-${index}`}
+              />
+            );
+          })}
+        </div>
         <div className="letter">{letter}</div>
       </button>
     );
@@ -52,7 +64,7 @@ const Keyboard = () => {
     <div id="keyboard" key={uuidv4()}>
       {rows.map((row, index) => {
         return (
-          <div key={uuidv4()}>
+          <div className="keyboard-row" key={uuidv4()}>
             {row.split("").map((letter) => {
               if (letter == "1") return renderLetter("Enter");
               if (letter == "2") return renderLetter("Back");

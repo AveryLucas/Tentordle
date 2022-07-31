@@ -11,14 +11,11 @@
   flex-direction: column;
   align-items: center;
   // position: relative;
-  padding: 50px;
+  flex-grow: 1;
+  padding: 20px;
 
-  .mini-wordle {
-    margin-bottom: $spaceBetween;
-
-    &:last-child {
-      margin: 0;
-    }
+  .mini-wordle:last-child {
+    margin: 0;
   }
 }
 
@@ -80,7 +77,7 @@
       div {
         width: 8px;
         height: 8px;
-        border-radius: 7px;
+        border-radius: 10px;
         // background: #252525;
       }
     }
@@ -186,8 +183,18 @@
   flex-direction: column;
   align-items: center;
 
+  .keyboard-row {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    width: 100%;
+  }
+
   .keyboard-letter {
+    position: relative;
+    flex-shrink: 1;
     display: inline-flex;
+    overflow: hidden;
     width: 35px;
     height: 45px;
     margin: 3px;
@@ -231,7 +238,7 @@
   flex-direction: column;
   justify-content: flex-end;
   align-items: center;
-  flex-grow: 1;
+  background: #fff;
 
   position: sticky;
   bottom: 0;
@@ -239,6 +246,38 @@
 
   .wordle {
     margin-bottom: 15px;
+  }
+}
+
+.letter-hints {
+  position: absolute;
+  left: 0;
+  top: 0;
+  // padding: 1px;
+  height: 100%;
+  width: 7px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+
+  div {
+    // background: red;
+    width: 100%;
+    flex-grow: 1;
+    // margin: 1px;
+    // border-radius: 10px;
+
+    &.correct {
+      background: $correct;
+    }
+
+    &.misplaced {
+      background: $misplaced;
+    }
+
+    &.incorrect {
+      background: $incorrect;
+    }
   }
 }
 
@@ -285,20 +324,11 @@
 .highlight {
   position: fixed;
   width: 6px;
-  transition: top 100ms linear;
+  transition: top 1000ms cubic-bezier(0.16, 1, 0.3, 1);
   transform: translateX(-20px) scaleY(0.5);
   background: #161616;
   border-radius: 20px;
   animation: 1s linear 0s 1 fadeIn;
-}
-
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
 }
 
 .hint-container {
@@ -319,8 +349,8 @@
   user-select: none;
 
   transition: height 600ms, margin 600ms;
-  border-radius: 10px;
-  margin-bottom: 20px;
+  border-radius: 25px;
+  margin-bottom: calc(min(1vh, 10px));
   width: 100%;
   max-width: 300px;
 
@@ -433,12 +463,38 @@
     width: calc(100% - 40px);
     max-width: 300px;
     padding: 20px;
-    background: #f6f6f6;
+    background: rgba(211, 214, 218, 0.35);
     opacity: 1;
     flex-shrink: 0;
   }
+}
 
-  &:nth-child(even) {
+#header {
+  padding: 20px;
+  h1 {
+    text-align: center;
+    font-size: 32px;
+    margin: 0;
+  }
+
+  p {
+    font-weight: 700;
+    font-size: 16px;
+    margin: 0;
+
+    text-align: center;
+    letter-spacing: 0.03em;
+
+    color: rgba(0, 0, 0, 0.69);
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }
 

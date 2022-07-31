@@ -18,21 +18,20 @@ const generateWordle = () => ({
 const generateWordleArr = (num) =>
   new Array(num).fill({}).map(() => generateWordle());
 
-const initialState = {
+const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
+
+const generateNewState = () => ({
   input: "",
   pastGuesses: [],
   lastGuess: "",
+  remainingGuesses: 10,
   wordles: generateWordleArr(5),
   queue: generateWordArr(10),
   solved: {},
   selected: 0,
-};
+});
 
-const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
-
-let i = 0;
-let interval = undefined;
-// let hints = [];
+const initialState = generateNewState();
 
 export const wordleSlice = createSlice({
   name: "wordle",
@@ -59,25 +58,22 @@ export const wordleSlice = createSlice({
       }
     },
     submitRandomGuess: (state) => {
+      const { wordles, solved } = state;
       const rngWord = dictionary[Math.floor(Math.random() * dictionary.length)];
-      for (var i = 0; i < state.wordles.length; i++) {
-        if (rngWord == state.wordles[i].word && !state.solved[rngWord]) {
+      for (var i = 0; i < wordles.length; i++) {
+        if (rngWord == wordles[i].word && !solved[rngWord])
           state.solved[rngWord] = 1;
-        }
       }
 
       state.pastGuesses.push(rngWord.toUpperCase());
       state.input = "";
     },
     submitInput: (state) => {
-      if (state.input.length) {
-        for (var i = 0; i < state.wordles.length; i++) {
-          if (
-            state.input == state.wordles[i].word &&
-            !state.solved[state.input]
-          ) {
-            state.solved[state.input] = 1;
-          }
+      const { wordles, input, solved } = state;
+      if (input.length) {
+        for (var i = 0; i < wordles.length; i++) {
+          if (input == wordles[i].word && !solved[input])
+            state.solved[input] = 1;
         }
 
         state.pastGuesses.push(state.input);
@@ -103,19 +99,7 @@ export const wordleSlice = createSlice({
     modifySelected: (state, { payload }) => {
       const { wordles, selected } = state;
       state.selected = clamp(selected + payload, 0, wordles.length - 1);
-    },
-    reset: (state) => {
-      state.wordles = [
-        generateWordle(),
-        generateWordle(),
-        generateWordle(),
-        generateWordle(),
-        generateWordle(),
-      ];
-
-      state.queue = [generateWordle()];
-      state.pastGuesses = [];
-    },
+    }
   },
 });
 
@@ -126,7 +110,6 @@ export const {
   backspace,
   setSelected,
   modifySelected,
-  reset,
   updateHints,
   moveWordleQueueToIndex,
 } = wordleSlice.actions;

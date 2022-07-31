@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import "../css/wordle.min.css";
 import Wordle from "./Wordle/Wordle";
 import Keyboard from "./Wordle/Keyboard";
-import anime from "animejs";
+import Highlight from "./Wordle/Highlight";
 
 import {
   submitRandomGuess,
@@ -15,32 +15,11 @@ import {
   modifySelected,
   reset,
   updateHints,
-  updateHintsAtPosition,
 } from "../reducers/wordleSlice";
-
-import Highlight from "./Wordle/Highlight";
-
-// let interval = undefined;
-
-// const test = () => {
-//   anime.remove([`.mini-wordle .wordle-col`, `.mini-wordle .wordle-col .hints`]);
-
-//   anime({
-//     targets: `.mini-wordle .wordle-col`,
-//     opacity: [0.1, 1],
-//     delay: anime.stagger(250, { grid: [5, 1], from: "first", axis: "x" }),
-//   });
-
-//   anime({
-//     targets: `.mini-wordle .wordle-col .hints`,
-//     scale: [0.5, 1],
-//     delay: anime.stagger(250, { grid: [5, 1], from: "first", axis: "x" }),
-//   });
-// };
 
 const Game = () => {
   const dispatch = useDispatch();
-  const { wordles, selected } = useSelector((state) => state.wordle);
+  const { wordles, selected, solved } = useSelector((state) => state.wordle);
 
   useEffect(() => {
     document.addEventListener("keydown", onKeyPress);
@@ -58,7 +37,6 @@ const Game = () => {
     switch (true) {
       case event.key === "Backspace":
         dispatch(backspace());
-        if (event.ctrlKey) dispatch(reset());
         break;
       case event.key === "Enter":
         if (event.ctrlKey) dispatch(submitRandomGuess());
@@ -80,8 +58,16 @@ const Game = () => {
     }
   };
 
+  if (Object.keys(solved).length == 5) {
+    // console.log("DONE");
+  }
+
   return (
     <div id="game">
+      {/* <div id="header">
+        <h1>nine-tordle</h1>
+        <p>Going for the 10 streak? Good Luck...</p>
+      </div> */}
       <div className="wordle-group">
         {wordles.map((wordle, index) => {
           return (
