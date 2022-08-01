@@ -18,20 +18,22 @@ class WordleColumn extends React.Component {
     this.update = false;
     const { wordle, wordleIndex, letterIndex, fullsized } = this.props;
     const hints = wordle.wordles[wordleIndex].hints;
-    const hintsAtPos = hints.filter((hint) => hint.position == letterIndex);
+    const hintsAtPos = hints.filter(
+      (hint) => hint.position == letterIndex && hint.type !== "incorrect",
+    );
     const correct = hintsAtPos.filter((hint) => hint.type == "correct");
 
     if (this.stopAnimationStageUpdates) return;
 
-    if (!fullsized && correct.length !== 0) {
-      this.setState({ hintsOnDisplay: correct, animationStage: 3 });
+    // if (!fullsized && correct.length !== 0) {
+    //   this.setState({ hintsOnDisplay: correct, animationStage: 3 });
+    // } else {
+    if (hintsAtPos.length == 0 || deepEqual(hintsAtPos, this.previousHints)) {
+      this.setState({ hintsOnDisplay: hintsAtPos, animationStage: 1 });
     } else {
-      if (hintsAtPos.length == 0 || deepEqual(hintsAtPos, this.previousHints)) {
-        this.setState({ hintsOnDisplay: hintsAtPos, animationStage: 1 });
-      } else {
-        this.setState({ hintsOnDisplay: hintsAtPos, animationStage: 0 });
-      }
+      this.setState({ hintsOnDisplay: hintsAtPos, animationStage: 0 });
     }
+    // }
   };
 
   componentDidMount = () => {

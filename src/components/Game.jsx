@@ -64,7 +64,7 @@ const Game = () => {
 
   return (
     <div id="game">
-      <div className="wordle-group">
+      {/* <div className="wordle-group">
         {wordles.map((wordle, index) => {
           return (
             <Wordle
@@ -75,8 +75,12 @@ const Game = () => {
             />
           );
         })}
-      </div>
+      </div> */}
       <div id="selected">
+        <div id="header">
+          <h1>nine-tordle</h1>
+          <p>Well that was just embarrasing</p>
+        </div>
         <Wordle index={selected} />
         <Keyboard />
       </div>

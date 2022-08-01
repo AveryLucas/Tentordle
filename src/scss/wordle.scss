@@ -1,9 +1,26 @@
 @import "./variables";
 
+#header {
+  * {
+    margin: 0;
+    text-align: center;
+  }
+  h1 {
+    font-size: 24px;
+  }
+  p {
+    font-size: 18px;
+    color: rgba(0, 0, 0, 0.726);
+    font-weight: bold;
+  }
+}
+
 #game {
   display: flex;
   flex-direction: column;
   height: 100vh;
+  // background: #000;
+  background: $background;
 }
 
 .wordle-group {
@@ -193,9 +210,9 @@
 #selected {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
-  background: $background;
+  height: 100%;
 
   position: sticky;
   bottom: 0;

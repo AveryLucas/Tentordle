@@ -25,7 +25,7 @@ const generateNewState = () => ({
   pastGuesses: [],
   lastGuess: "",
   remainingGuesses: 10,
-  wordles: generateWordleArr(2),
+  wordles: generateWordleArr(1),
   queue: generateWordArr(10),
   solved: {},
   selected: 0,
@@ -42,7 +42,6 @@ export const wordleSlice = createSlice({
         state.wordles[i].hints = getAllHints(
           state.pastGuesses,
           state.wordles[i].word,
-          state.wordles[i].hints,
         );
       }
     },

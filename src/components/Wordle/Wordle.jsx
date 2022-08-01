@@ -60,7 +60,7 @@ const Wordle = ({ index, renderWordleQueue = false, fullsized = true }) => {
 
     return (
       <div className={classes}>
-        <p className="wordle-title">{index + 1}</p>
+        {/* <p className="wordle-title">{index + 1}</p> */}
         <div className="wordle-hints-container">
           {renderAllColumns(updateHints)}
         </div>
