@@ -43,7 +43,9 @@ const Keyboard = () => {
     return (
       <button onClick={onClick} className={classes} key={uuidv4()}>
         <div className="letter-background" />
-        <div className="letter">{letter}</div>
+        <div onClick={onClick} className="letter">
+          {letter}
+        </div>
       </button>
     );
   };
