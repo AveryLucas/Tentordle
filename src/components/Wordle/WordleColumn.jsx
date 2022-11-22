@@ -95,10 +95,14 @@ class WordleColumn extends React.Component {
     const childClasses = classNames({
       letter: fullsized,
       "wordle-brights": !fullsized,
+      empty: letter !== "",
     });
     return (
       <div className={classes}>
-        <div className={childClasses}>{letter}</div>
+        <div className={childClasses}>
+          <p>{letter}</p>
+        </div>
+        <div className="letter-background" />
       </div>
     );
   };
@@ -107,9 +111,6 @@ class WordleColumn extends React.Component {
     const { hintsOnDisplay, animationStage } = this.state;
     const { letterIndex, wordleIndex } = this.props;
     const { input, wordles } = this.props.wordle;
-
-    // console.log(wordles[wordleIndex]);
-
     const classes = classNames("wordle-col", (hintsOnDisplay[0] || {}).type);
 
     return (
@@ -118,6 +119,7 @@ class WordleColumn extends React.Component {
         animation-stage={animationStage}
         onAnimationEnd={this.onAnimationEnd}
       >
+        {this.renderLetterOrBright(input[letterIndex], hintsOnDisplay)}
         <div className="hints">
           {hintsOnDisplay.map((hint, hintIndex) => {
             if (letterIndex == hint.position) {
@@ -129,7 +131,6 @@ class WordleColumn extends React.Component {
             }
           })}
         </div>
-        {this.renderLetterOrBright(input[letterIndex], hintsOnDisplay)}
       </div>
     );
   }

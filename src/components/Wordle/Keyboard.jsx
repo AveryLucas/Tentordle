@@ -13,7 +13,7 @@ import {
 const Keyboard = () => {
   const dispatch = useDispatch();
 
-  const { wordles, selected } = useSelector((state) => state.wordle);
+  const { wordles, selected, keysDown } = useSelector((state) => state.wordle);
 
   const renderLetter = (letter) => {
     const hints = wordles[selected].hints;
@@ -22,6 +22,7 @@ const Keyboard = () => {
     const classes = classNames({
       "keyboard-letter": 1,
       [(hintsForLetter[0] || [{}]).type]: 1,
+      down: keysDown[letter] !== undefined,
       wide: ["Enter", "Back"].indexOf(letter) !== -1,
     });
 
@@ -41,18 +42,7 @@ const Keyboard = () => {
 
     return (
       <button onClick={onClick} className={classes} key={uuidv4()}>
-        <div className="letter-hints">
-          {wordles.map((wordle, index) => {
-            const hint =
-              wordle.hints.filter((hint) => hint.letter == letter)[0] || {};
-            return (
-              <div
-                className={hint.type}
-                key={`letter-hint-${letter}-${index}`}
-              />
-            );
-          })}
-        </div>
+        <div className="letter-background" />
         <div className="letter">{letter}</div>
       </button>
     );
@@ -64,7 +54,7 @@ const Keyboard = () => {
     <div id="keyboard" key={uuidv4()}>
       {rows.map((row, index) => {
         return (
-          <div className="keyboard-row" key={uuidv4()}>
+          <div className="keyboard-row" key={"keyboard-row-" + index}>
             {row.split("").map((letter) => {
               if (letter == "1") return renderLetter("Enter");
               if (letter == "2") return renderLetter("Back");

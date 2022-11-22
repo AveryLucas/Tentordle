@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { v4 as uuidv4 } from "uuid";
+// import { v4 as uuidv4 } from "uuid";
 import classNames from "classnames";
 
 import {
@@ -22,22 +22,25 @@ const Wordle = ({ index, renderWordleQueue = false, fullsized = true }) => {
     setLastWord([...pastGuesses].reverse()[0]);
   }
 
+  // If we guessed the right word and haven't started the animation yet.
   if (
     lastWord === wordles[index].word &&
     animationStage === -1 &&
     Object.keys(solved).length <= 5
   ) {
+    // console.log(solved);
     setAnimationStage(0);
   }
 
   const onAnimationEnd = (event) => {
-    if (event.animationName == "condenseWord") {
-      setAnimationStage(1);
-    }
-    if (event.animationName == "translateXToZero") {
-      dispatch(moveWordleQueueToIndex(index));
-      setAnimationStage(-1);
-    }
+    // console.log(event.animationName)
+    // if (event.animationName == "condenseWord") {
+    //   setAnimationStage(1);
+    // }
+    // if (event.animationName == "translateXToZero") {
+    //   dispatch(moveWordleQueueToIndex(index));
+    //   setAnimationStage(-1);
+    // }
   };
 
   const renderAllColumns = (updateHints) => {

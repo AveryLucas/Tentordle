@@ -28,6 +28,7 @@ const generateNewState = () => ({
   wordles: generateWordleArr(1),
   queue: generateWordArr(10),
   solved: {},
+  keysDown: {},
   selected: 0,
 });
 
@@ -89,6 +90,18 @@ export const wordleSlice = createSlice({
         state.input = state.input + payload.toUpperCase();
       }
     },
+    keyWatcher: (state, { payload }) => {
+      console.log(payload.repeat);
+
+      if (payload.type == "keydown")
+        state.keysDown = { ...state.keysDown, [payload.key.toUpperCase()]: 1 };
+
+      if (payload.type == "keyup") {
+        let temp = state.keysDown;
+        delete temp[payload.key.toUpperCase()];
+        state.keysDown = temp;
+      }
+    },
     backspace: (state) => {
       state.input = state.input.substring(0, state.input.length - 1);
     },
@@ -112,6 +125,7 @@ export const {
   modifySelected,
   updateHints,
   moveWordleQueueToIndex,
+  keyWatcher,
 } = wordleSlice.actions;
 
 export default wordleSlice.reducer;

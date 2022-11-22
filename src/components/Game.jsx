@@ -15,6 +15,7 @@ import {
   modifySelected,
   reset,
   updateHints,
+  keyWatcher,
 } from "../reducers/wordleSlice";
 
 const Game = () => {
@@ -22,18 +23,24 @@ const Game = () => {
   const { wordles, selected, solved } = useSelector((state) => state.wordle);
 
   useEffect(() => {
-    document.addEventListener("keydown", onKeyPress);
+    document.addEventListener("keydown", onKeyDown);
+    document.addEventListener("keyup", onKeyUp);
     document.addEventListener("wheel", onWheel);
     wordles.forEach((wordle) => console.log(wordle.word));
     return () => {
-      document.removeEventListener("keydown", onKeyPress);
+      document.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("keyup", onKeyUp);
       document.removeEventListener("wheel", onWheel);
     };
   }, []);
 
   const onWheel = (event) => dispatch(modifySelected(Math.sign(event.deltaY)));
 
-  const onKeyPress = (event) => {
+  const onKeyUp = (event) => dispatch(keyWatcher(event));
+
+  const onKeyDown = (event) => {
+    if (event.repeat) return;
+    
     switch (true) {
       case event.key === "Backspace":
         dispatch(backspace());
@@ -53,6 +60,8 @@ const Game = () => {
         dispatch(setSelected(Number(event.key) - 1));
         break;
       default:
+        // console.log(event.type);
+        dispatch(keyWatcher(event));
         dispatch(addToInput(event.key));
         break;
     }
